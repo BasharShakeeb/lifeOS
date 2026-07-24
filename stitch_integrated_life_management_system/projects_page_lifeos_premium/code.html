@@ -1,0 +1,580 @@
+<!DOCTYPE html><html class="light" dir="rtl" lang="ar"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>LifeOS - المشاريع</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"surface-container-highest": "#d3e4fe", "primary-container": "#10b981", "inverse-surface": "#213145", "secondary-fixed": "#b0f0d6", "surface-variant": "#d3e4fe", "surface-container": "#e5eeff", "surface-tint": "#006c49", "tertiary-container": "#99a69e", "on-primary-fixed": "#002113", "on-error-container": "#93000a", outline: "#6c7a71", "on-tertiary-fixed": "#131e19", "on-secondary-container": "#306d58", "on-primary": "#ffffff", "outline-variant": "#bbcabf", error: "#ba1a1a", "error-container": "#ffdad6", "on-tertiary-fixed-variant": "#3e4943", "tertiary-fixed-dim": "#bdcac1", surface: "#f8f9ff", "tertiary-fixed": "#d9e6dd", "on-surface-variant": "#3c4a42", background: "#f8f9ff", "on-primary-fixed-variant": "#005236", "surface-dim": "#cbdbf5", "surface-bright": "#f8f9ff", "primary-fixed-dim": "#4edea3", "on-tertiary": "#ffffff", "on-error": "#ffffff", "inverse-primary": "#4edea3", "secondary-fixed-dim": "#95d3ba", secondary: "#2b6954", "surface-container-high": "#dce9ff", "on-secondary-fixed": "#002117", "on-secondary": "#ffffff", "on-tertiary-container": "#303c36", primary: "#006c49", "primary-fixed": "#6ffbbe", "on-background": "#0b1c30", "on-secondary-fixed-variant": "#0b513d", tertiary: "#55615a", "surface-container-low": "#eff4ff", "on-primary-container": "#00422b", "inverse-on-surface": "#eaf1ff", "surface-container-lowest": "#ffffff", "secondary-container": "#adedd3", "on-surface": "#0b1c30"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {"sidebar-collapsed": "80px", "sidebar-expanded": "256px", "stack-sm": "8px", "stack-md": "16px", gutter: "24px", "margin-page": "32px"}, fontFamily: {sans: ["Hanken Grotesk", "sans-serif"], headline: ["Hanken Grotesk"], display: ["Hanken Grotesk"], body: ["Hanken Grotesk"], label: ["Hanken Grotesk"]}, fontSize: {}}}};</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .sidebar-transition {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        body {
+            background-color: #f8f9ff;
+            color: #0b1c30;
+            font-family: 'Hanken Grotesk', sans-serif;
+        }
+
+        .project-card {
+            transition: all 0.2s ease;
+        }
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(0, 108, 73, 0.15);
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+<!-- Right Sidebar (Collapsible) -->
+<aside class="fixed right-0 top-0 h-screen w-sidebar-expanded bg-white border-l border-outline-variant z-50 flex flex-col sidebar-transition group shadow-sm" id="sidebar">
+<div class="flex items-center gap-3 h-20 px-6 border-b border-surface-container overflow-hidden shrink-0">
+<div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shrink-0 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">eco</span>
+</div>
+<div class="transition-opacity duration-300 group-[.collapsed]:opacity-0 group-[.collapsed]:invisible whitespace-nowrap">
+<h1 class="text-xl font-bold text-primary tracking-tight">LifeOS</h1>
+<p class="text-[10px] text-on-surface-variant leading-none uppercase tracking-widest font-semibold">Premium Productivity</p>
+</div>
+</div>
+<nav class="flex-1 py-6 px-3 space-y-1 overflow-y-auto scrollbar-hide">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all group/item" href="#">
+<span class="material-symbols-outlined shrink-0 group-hover/item:text-primary transition-colors">home</span>
+<span class="font-medium whitespace-nowrap group-[.collapsed]:hidden">الرئيسية</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all group/item" href="#">
+<span class="material-symbols-outlined shrink-0 group-hover/item:text-primary transition-colors">task_alt</span>
+<span class="font-medium whitespace-nowrap group-[.collapsed]:hidden">المهام</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all group/item" href="#">
+<span class="material-symbols-outlined shrink-0 group-hover/item:text-primary transition-colors">grid_view</span>
+<span class="font-medium whitespace-nowrap group-[.collapsed]:hidden">المراكز (Hubs)</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg bg-secondary-container text-on-secondary-container font-bold group/item shadow-sm border border-secondary/10" href="#">
+<span class="material-symbols-outlined shrink-0" style="font-variation-settings: 'FILL' 1;">folder_open</span>
+<span class="whitespace-nowrap group-[.collapsed]:hidden">المشاريع</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all group/item" href="#">
+<span class="material-symbols-outlined shrink-0 group-hover/item:text-primary transition-colors">assignment</span>
+<span class="font-medium whitespace-nowrap group-[.collapsed]:hidden">الواجبات</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all group/item" href="#">
+<span class="material-symbols-outlined shrink-0 group-hover/item:text-primary transition-colors">favorite</span>
+<span class="font-medium whitespace-nowrap group-[.collapsed]:hidden">الصحة</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all group/item" href="#">
+<span class="material-symbols-outlined shrink-0 group-hover/item:text-primary transition-colors">calendar_today</span>
+<span class="font-medium whitespace-nowrap group-[.collapsed]:hidden">التقويم</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all group/item" href="#">
+<span class="material-symbols-outlined shrink-0 group-hover/item:text-primary transition-colors">description</span>
+<span class="font-medium whitespace-nowrap group-[.collapsed]:hidden">الملاحظات</span>
+</a>
+</nav>
+<div class="p-4 border-t border-surface-container">
+<button class="w-full flex items-center justify-center p-2 rounded-lg bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high transition-colors" onclick="toggleSidebar()">
+<span class="material-symbols-outlined transition-transform duration-300" id="collapse-icon">chevron_right</span>
+</button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="mr-sidebar-expanded p-margin-page min-h-screen sidebar-transition" id="main-content">
+<!-- Top Header -->
+<header class="flex justify-between items-center mb-10">
+<div>
+<h2 class="text-3xl font-extrabold text-on-surface tracking-tight">المشاريع</h2>
+<p class="text-on-surface-variant text-sm mt-1">إدارة مشاريعك وتتبع تقدمها في مراكزك المختلفة</p>
+</div>
+<div class="flex items-center gap-5">
+<div class="relative w-80 hidden md:block">
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pr-12 pl-4 py-3 rounded-full border border-outline-variant bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-outline-variant text-sm" placeholder="ابحث عن مشروع أو مهمة..." type="text">
+<div class="absolute left-4 top-1/2 -translate-y-1/2 bg-surface-container-low text-[10px] px-2 py-0.5 rounded border border-outline-variant text-outline font-semibold tracking-wider">⌘ K</div>
+</div>
+<button class="p-3 rounded-full bg-white border border-outline-variant text-on-surface-variant hover:bg-surface transition-colors relative shadow-sm">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2.5 right-3 w-2.5 h-2.5 bg-error rounded-full border-2 border-white"></span>
+</button>
+<div class="flex items-center gap-3 pr-5 border-r border-outline-variant">
+<div class="text-left">
+<p class="font-bold text-on-surface text-sm">أحمد محمد</p>
+<p class="text-[11px] text-on-surface-variant font-medium">مدير المشروع</p>
+</div>
+<img class="w-11 h-11 rounded-full border-2 border-primary/20 object-cover p-0.5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0UXUk4-bpSz8ewA52Ugbln-7YcfwRTNM7NyOVGL-4g2xgfzw85Z7VHdTq5R-g7p9V_336oNIrwbuWA3UPj1I2YGcGegvSZ0PigrtSuuqPUkYeIlqYzA4p3H0lx_QKjwpyNMkFm7v_yby8j6m4TZ0l3GQzpG9hqhSduOh8oUQXbEMJB5RWW_m3chixOnuO-b-a5d2VVWuWaqzMpNFb9xtEY9pU4yeYs83I0hrRX2SIWlIiaTcRj8Mq">
+</div>
+</div>
+</header>
+<!-- Quick Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-10">
+<div class="bg-white p-6 rounded-xl border border-outline-variant flex justify-between items-center shadow-sm">
+<div>
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-wider">جميع المشاريع</p>
+<h3 class="text-3xl font-black text-on-surface mt-2">18</h3>
+</div>
+<div class="w-14 h-14 bg-surface-container-low text-primary rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">folder</span>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant flex justify-between items-center shadow-sm">
+<div>
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-wider">قيد التنفيذ</p>
+<h3 class="text-3xl font-black text-on-surface mt-2">10</h3>
+</div>
+<div class="w-14 h-14 bg-secondary-container text-primary rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">pending_actions</span>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant flex justify-between items-center shadow-sm">
+<div>
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-wider">مكتملة</p>
+<h3 class="text-3xl font-black text-on-surface mt-2">5</h3>
+</div>
+<div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">check_circle</span>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant flex justify-between items-center shadow-sm">
+<div>
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-wider">متوقفة</p>
+<h3 class="text-3xl font-black text-on-surface mt-2">3</h3>
+</div>
+<div class="w-14 h-14 bg-error-container text-error rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">pause_circle</span>
+</div>
+</div>
+</div>
+<!-- Controls Row -->
+<div class="flex flex-wrap justify-between items-center gap-4 mb-8">
+<div class="flex items-center gap-4">
+<button class="px-8 py-3.5 bg-primary text-white rounded-xl font-bold flex items-center gap-3 hover:bg-secondary transition-all shadow-lg shadow-primary/20 active:scale-95" onclick="openDrawer()">
+<span class="material-symbols-outlined">add</span>
+                    إضافة مشروع جديد
+                </button>
+<div class="flex border border-outline-variant rounded-xl overflow-hidden bg-white shadow-sm">
+<button class="p-3 bg-surface-container text-primary border-l border-outline-variant">
+<span class="material-symbols-outlined">grid_view</span>
+</button>
+<button class="p-3 text-on-surface-variant hover:bg-surface transition-colors">
+<span class="material-symbols-outlined">list</span>
+</button>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-5 py-3 border border-outline-variant rounded-xl bg-white text-on-surface font-medium hover:bg-surface transition-all shadow-sm">
+<span class="material-symbols-outlined text-outline">filter_list</span>
+                    تصفية
+                </button>
+<div class="flex items-center gap-3 px-5 py-3 border border-outline-variant rounded-xl bg-white text-on-surface font-medium shadow-sm cursor-pointer hover:bg-surface transition-all">
+<span class="material-symbols-outlined text-outline">sort</span>
+<span class="text-sm">الترتيب: الأحدث</span>
+<span class="material-symbols-outlined text-outline">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Projects Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter mb-12">
+<!-- Project Card 1 -->
+<div class="bg-white rounded-xl border border-outline-variant p-6 project-card relative cursor-pointer group shadow-sm">
+<button class="absolute top-5 left-5 text-outline hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+<div class="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-3xl">school</span>
+</div>
+<h4 class="text-xl font-bold text-on-surface mb-2">مشروع التخرج</h4>
+<p class="text-on-surface-variant text-sm mb-8 leading-relaxed">تطوير تطبيق ذكي متكامل لإدارة وتحسين عمليات التخلص من النفايات المنزلية باستخدام تقنيات AI.</p>
+<div class="mb-8">
+<div class="flex justify-between items-center mb-3">
+<span class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">التقدم</span>
+<span class="text-sm font-black text-primary">75%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2.5 overflow-hidden">
+<div class="bg-primary h-full w-[75%] rounded-full shadow-[0_0_8px_rgba(0,108,73,0.3)]"></div>
+</div>
+</div>
+<div class="grid grid-cols-3 border-t border-surface-container pt-6 gap-2 text-center">
+<div>
+<span class="material-symbols-outlined text-lg text-outline block mb-1">notes</span>
+<p class="text-sm font-black">12</p>
+<p class="text-[10px] text-on-surface-variant font-bold">ملاحظات</p>
+</div>
+<div>
+<span class="material-symbols-outlined text-lg text-outline block mb-1">attachment</span>
+<p class="text-sm font-black">5</p>
+<p class="text-[10px] text-on-surface-variant font-bold">ملفات</p>
+</div>
+<div>
+<span class="material-symbols-outlined text-lg text-outline block mb-1">task_alt</span>
+<p class="text-sm font-black">3</p>
+<p class="text-[10px] text-on-surface-variant font-bold">مهام</p>
+</div>
+</div>
+<div class="mt-6 pt-4 flex justify-between items-center text-[10px] font-bold">
+<span class="text-outline uppercase">ينتهي في 25 مايو 2025</span>
+<span class="text-error bg-error-container/30 px-2 py-0.5 rounded italic">بعد 5 أيام</span>
+</div>
+</div>
+<!-- Project Card 2 -->
+<div class="bg-white rounded-xl border border-outline-variant p-6 project-card relative cursor-pointer group shadow-sm">
+<button class="absolute top-5 left-5 text-outline hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+<div class="w-14 h-14 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-3xl">smart_toy</span>
+</div>
+<h4 class="text-xl font-bold text-on-surface mb-2">الذكاء الاصطناعي</h4>
+<p class="text-on-surface-variant text-sm mb-8 leading-relaxed">دراسة متعمقة لخوارزميات التعلم العميق والشبكات العصبية وتطبيقاتها في معالجة الصور.</p>
+<div class="mb-8">
+<div class="flex justify-between items-center mb-3">
+<span class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">التقدم</span>
+<span class="text-sm font-black text-primary">60%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2.5 overflow-hidden">
+<div class="bg-primary h-full w-[60%] rounded-full shadow-[0_0_8px_rgba(0,108,73,0.3)]"></div>
+</div>
+</div>
+<div class="grid grid-cols-3 border-t border-surface-container pt-6 gap-2 text-center">
+<div>
+<span class="material-symbols-outlined text-lg text-outline block mb-1">notes</span>
+<p class="text-sm font-black">8</p>
+<p class="text-[10px] text-on-surface-variant font-bold">ملاحظات</p>
+</div>
+<div>
+<span class="material-symbols-outlined text-lg text-outline block mb-1">attachment</span>
+<p class="text-sm font-black">18</p>
+<p class="text-[10px] text-on-surface-variant font-bold">ملفات</p>
+</div>
+<div>
+<span class="material-symbols-outlined text-lg text-outline block mb-1">task_alt</span>
+<p class="text-sm font-black">6</p>
+<p class="text-[10px] text-on-surface-variant font-bold">مهام</p>
+</div>
+</div>
+<div class="mt-6 pt-4 text-[10px] font-bold text-outline uppercase">
+                    تاريخ الانتهاء 15 يونيو 2025
+                </div>
+</div>
+<!-- Project Card 3 -->
+<div class="bg-white rounded-xl border border-outline-variant p-6 project-card relative cursor-pointer group shadow-sm">
+<button class="absolute top-5 left-5 text-outline hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+<div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-3xl">code</span>
+</div>
+<h4 class="text-xl font-bold text-on-surface mb-2">موقع المحفظة</h4>
+<p class="text-on-surface-variant text-sm mb-8 leading-relaxed">تصميم وتطوير موقع شخصي احترافي لعرض الأعمال والمهارات باستخدام Next.js و Tailwind.</p>
+<div class="mb-8">
+<div class="flex justify-between items-center mb-3">
+<span class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">التقدم</span>
+<span class="text-sm font-black text-primary">90%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2.5 overflow-hidden">
+<div class="bg-primary h-full w-[90%] rounded-full shadow-[0_0_8px_rgba(0,108,73,0.3)]"></div>
+</div>
+</div>
+<div class="grid grid-cols-3 border-t border-surface-container pt-6 gap-2 text-center">
+<div>
+<span class="material-symbols-outlined text-lg text-outline block mb-1">notes</span>
+<p class="text-sm font-black">24</p>
+<p class="text-[10px] text-on-surface-variant font-bold">ملاحظات</p>
+</div>
+<div>
+<span class="material-symbols-outlined text-lg text-outline block mb-1">attachment</span>
+<p class="text-sm font-black">12</p>
+<p class="text-[10px] text-on-surface-variant font-bold">ملفات</p>
+</div>
+<div>
+<span class="material-symbols-outlined text-lg text-outline block mb-1">task_alt</span>
+<p class="text-sm font-black">4</p>
+<p class="text-[10px] text-on-surface-variant font-bold">مهام</p>
+</div>
+</div>
+<div class="mt-6 pt-4 text-[10px] font-bold text-outline uppercase">
+                    تاريخ الانتهاء 10 مايو 2025
+                </div>
+</div>
+</div>
+<!-- Recent Projects Table -->
+<div class="bg-white rounded-xl border border-outline-variant overflow-hidden shadow-sm">
+<div class="p-6 border-b border-surface-container flex justify-between items-center bg-surface-container-low/30">
+<h4 class="text-lg font-extrabold text-on-surface tracking-tight">جميع سجلات المشاريع</h4>
+<button class="text-primary text-xs font-bold hover:underline transition-all">عرض التقارير الكاملة</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-right whitespace-nowrap">
+<thead>
+<tr class="bg-surface-container-low/50 text-on-surface-variant text-[11px] font-black uppercase tracking-widest border-b border-surface-container">
+<th class="px-8 py-5">المشروع</th>
+<th class="px-8 py-5">المركز (Hub)</th>
+<th class="px-8 py-5">مستوى الإنجاز</th>
+<th class="px-8 py-5 text-center">الحالة</th>
+<th class="px-8 py-5">الموعد النهائي</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<tr class="hover:bg-surface-container-low/30 transition-colors group cursor-pointer">
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<div class="w-11 h-11 bg-secondary-container text-primary rounded-xl flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined">brush</span>
+</div>
+<div>
+<p class="font-extrabold text-sm text-on-surface">تصميم هوية بصرية</p>
+<p class="text-[11px] text-on-surface-variant font-medium">مشروع تطوير الهوية التجارية</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-lg">work</span>
+<span class="text-xs font-bold text-on-surface">العمل الاحترافي</span>
+</div>
+</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<span class="text-xs font-black text-on-surface w-8">85%</span>
+<div class="w-32 bg-surface-container rounded-full h-2 overflow-hidden">
+<div class="bg-primary h-full w-[85%] rounded-full"></div>
+</div>
+</div>
+</td>
+<td class="px-8 py-5 text-center">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-secondary-container/50 text-primary text-[10px] font-black rounded-full border border-primary/10">
+<span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+                                    قيد التنفيذ
+                                </span>
+</td>
+<td class="px-8 py-5">
+<div>
+<p class="text-xs font-extrabold">25 مايو 2025</p>
+<p class="text-[10px] text-error font-bold mt-0.5">بعد 5 أيام</p>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors group cursor-pointer">
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<div class="w-11 h-11 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined">edit_note</span>
+</div>
+<div>
+<p class="font-extrabold text-sm text-on-surface">نظام إدارة المهام</p>
+<p class="text-[11px] text-on-surface-variant font-medium">بناء أداة إنتاجية داخلية</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-lg">work</span>
+<span class="text-xs font-bold text-on-surface">العمل الاحترافي</span>
+</div>
+</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<span class="text-xs font-black text-on-surface w-8">65%</span>
+<div class="w-32 bg-surface-container rounded-full h-2 overflow-hidden">
+<div class="bg-primary h-full w-[65%] rounded-full"></div>
+</div>
+</div>
+</td>
+<td class="px-8 py-5 text-center">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-secondary-container/50 text-primary text-[10px] font-black rounded-full border border-primary/10">
+<span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+                                    قيد التنفيذ
+                                </span>
+</td>
+<td class="px-8 py-5">
+<div>
+<p class="text-xs font-extrabold">10 يونيو 2025</p>
+<p class="text-[10px] text-on-surface-variant font-bold mt-0.5">بعد 21 يوم</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-6 bg-surface-container-low/20 border-t border-surface-container flex justify-between items-center">
+<span class="text-xs font-bold text-on-surface-variant">عرض 1-2 من 18 مشروع مسجل</span>
+<div class="flex gap-2">
+<button class="w-9 h-9 rounded-lg border border-outline-variant flex items-center justify-center hover:bg-white transition-all text-outline hover:text-primary">
+<span class="material-symbols-outlined text-lg">chevron_right</span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-primary text-white flex items-center justify-center font-black text-sm shadow-sm">1</button>
+<button class="w-9 h-9 rounded-lg border border-outline-variant flex items-center justify-center hover:bg-white transition-all text-on-surface font-bold text-sm">2</button>
+<button class="w-9 h-9 rounded-lg border border-outline-variant flex items-center justify-center hover:bg-white transition-all text-outline hover:text-primary">
+<span class="material-symbols-outlined text-lg">chevron_left</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Overlay Backdrop -->
+<div class="fixed inset-0 bg-inverse-surface/40 backdrop-blur-sm z-[60] hidden opacity-0 transition-opacity duration-300" id="drawer-overlay" onclick="closeDrawer()"></div>
+<!-- Add Project Drawer (Slides from Left) -->
+<aside class="fixed left-0 top-0 h-screen w-full max-w-[540px] bg-white z-[70] shadow-[0_0_60px_-15px_rgba(0,0,0,0.3)] -translate-x-full drawer-transition flex flex-col" id="add-project-drawer">
+<div class="p-8 border-b border-surface-container flex justify-between items-center bg-surface-container-low/10">
+<div>
+<h3 class="text-2xl font-black text-on-surface tracking-tight">إضافة مشروع جديد</h3>
+<p class="text-xs text-on-surface-variant font-bold mt-1 uppercase tracking-widest">قم بإنشاء خطة عمل جديدة الآن</p>
+</div>
+<button class="p-2.5 rounded-full hover:bg-surface-container-low transition-colors text-outline" onclick="closeDrawer()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto p-8 space-y-8 scrollbar-hide">
+<!-- Project Name -->
+<div class="space-y-3">
+<label class="text-sm font-black text-on-surface block">اسم المشروع <span class="text-error">*</span></label>
+<input class="w-full px-5 py-4 rounded-xl border border-outline-variant focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-outline-variant font-medium" placeholder="مثلاً: تطوير واجهة المستخدم للمنصة" type="text">
+</div>
+<!-- Description -->
+<div class="space-y-3 relative">
+<label class="text-sm font-black text-on-surface block">الوصف التفصيلي</label>
+<textarea class="w-full h-36 px-5 py-4 rounded-xl border border-outline-variant focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none resize-none transition-all placeholder:text-outline-variant font-medium" placeholder="اشرح نطاق وأهداف المشروع باختصار..."></textarea>
+<span class="absolute bottom-4 left-5 text-[10px] text-outline font-black tracking-widest">0/500</span>
+</div>
+<!-- Hub Selection -->
+<div class="space-y-3">
+<label class="text-sm font-black text-on-surface block">المركز (Hub) المرتبط <span class="text-error">*</span></label>
+<div class="relative">
+<select class="w-full px-5 py-4 rounded-xl border border-outline-variant bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none appearance-none font-bold text-on-surface cursor-pointer">
+<option>اختر مركزاً...</option>
+<option>العمل الاحترافي</option>
+<option>التطوير الشخصي</option>
+<option>الدراسة والبحث</option>
+<option>الصحة واللياقة</option>
+</select>
+<span class="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Visual Options -->
+<div class="space-y-5">
+<label class="text-sm font-black text-on-surface block">الأيقونة والمظهر المرئي</label>
+<div class="grid grid-cols-5 gap-4">
+<button class="w-full aspect-square border-2 border-primary bg-secondary-container rounded-2xl flex items-center justify-center text-primary shadow-sm">
+<span class="material-symbols-outlined text-2xl">folder</span>
+</button>
+<button class="w-full aspect-square border border-outline-variant rounded-2xl flex items-center justify-center text-outline hover:border-primary hover:text-primary hover:bg-surface transition-all">
+<span class="material-symbols-outlined text-2xl">code</span>
+</button>
+<button class="w-full aspect-square border border-outline-variant rounded-2xl flex items-center justify-center text-outline hover:border-primary hover:text-primary hover:bg-surface transition-all">
+<span class="material-symbols-outlined text-2xl">school</span>
+</button>
+<button class="w-full aspect-square border border-outline-variant rounded-2xl flex items-center justify-center text-outline hover:border-primary hover:text-primary hover:bg-surface transition-all">
+<span class="material-symbols-outlined text-2xl">work</span>
+</button>
+<button class="w-full aspect-square border border-outline-variant rounded-2xl flex items-center justify-center text-outline hover:border-primary hover:text-primary hover:bg-surface transition-all">
+<span class="material-symbols-outlined text-2xl">favorite</span>
+</button>
+</div>
+<div class="flex gap-4">
+<div class="w-9 h-9 rounded-full bg-primary ring-4 ring-primary/20 ring-offset-2 cursor-pointer transition-transform hover:scale-110"></div>
+<div class="w-9 h-9 rounded-full bg-blue-500 cursor-pointer transition-transform hover:scale-110"></div>
+<div class="w-9 h-9 rounded-full bg-purple-500 cursor-pointer transition-transform hover:scale-110"></div>
+<div class="w-9 h-9 rounded-full bg-amber-500 cursor-pointer transition-transform hover:scale-110"></div>
+<div class="w-9 h-9 rounded-full bg-rose-500 cursor-pointer transition-transform hover:scale-110"></div>
+</div>
+</div>
+<!-- Dates -->
+<div class="grid grid-cols-2 gap-6">
+<div class="space-y-3">
+<label class="text-sm font-black text-on-surface block">تاريخ البدء</label>
+<input class="w-full px-5 py-4 rounded-xl border border-outline-variant outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary font-bold text-on-surface" type="date">
+</div>
+<div class="space-y-3">
+<label class="text-sm font-black text-on-surface block">تاريخ الانتهاء</label>
+<input class="w-full px-5 py-4 rounded-xl border border-outline-variant outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary font-bold text-on-surface" type="date">
+</div>
+</div>
+<!-- Attachments -->
+<div class="space-y-3">
+<label class="text-sm font-black text-on-surface block">المرفقات والوثائق</label>
+<div class="border-2 border-dashed border-outline-variant rounded-2xl p-10 flex flex-col items-center justify-center text-center hover:border-primary hover:bg-surface transition-all cursor-pointer group">
+<div class="w-14 h-14 rounded-2xl bg-surface-container flex items-center justify-center text-on-surface-variant mb-4 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+<span class="material-symbols-outlined text-2xl">upload</span>
+</div>
+<p class="font-black text-sm text-on-surface">اسحب الملفات هنا أو تصفح جهازك</p>
+<p class="text-[11px] text-on-surface-variant mt-2 font-bold uppercase tracking-wider">الحد الأقصى للملف 20MB (PDF, JPG, PNG)</p>
+</div>
+</div>
+</div>
+<div class="p-8 border-t border-surface-container flex gap-5 bg-surface-container-low/20">
+<button class="flex-1 py-4 border border-outline-variant rounded-xl font-black text-on-surface-variant hover:bg-white transition-all shadow-sm" onclick="closeDrawer()">إلغاء الأمر</button>
+<button class="flex-[2] py-4 bg-primary text-white rounded-xl font-black hover:bg-secondary transition-all shadow-xl shadow-primary/20 active:scale-95" onclick="saveProject()">حفظ وإنشاء المشروع</button>
+</div>
+</aside>
+<script>
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+        const collapseIcon = document.getElementById('collapse-icon');
+        const drawer = document.getElementById('add-project-drawer');
+        const overlay = document.getElementById('drawer-overlay');
+
+        function toggleSidebar() {
+            const isCollapsed = sidebar.classList.toggle('collapsed');
+            
+            if (isCollapsed) {
+                sidebar.style.width = '80px';
+                mainContent.style.marginRight = '80px';
+                collapseIcon.style.transform = 'rotate(180deg)';
+                sidebar.classList.add('collapsed');
+            } else {
+                sidebar.style.width = '256px';
+                mainContent.style.marginRight = '256px';
+                collapseIcon.style.transform = 'rotate(0deg)';
+                sidebar.classList.remove('collapsed');
+            }
+        }
+
+        function openDrawer() {
+            drawer.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+            setTimeout(() => overlay.classList.add('opacity-100'), 10);
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeDrawer() {
+            drawer.classList.add('-translate-x-full');
+            overlay.classList.remove('opacity-100');
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }, 300);
+        }
+
+        function saveProject() {
+            const btn = event.currentTarget;
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> جاري الحفظ...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                closeDrawer();
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+                // Basic toast simulation
+                const toast = document.createElement('div');
+                toast.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 bg-on-background text-white px-8 py-4 rounded-xl shadow-2xl z-[100] font-bold flex items-center gap-3 animate-bounce';
+                toast.innerHTML = '<span class="material-symbols-outlined text-primary">check_circle</span> تم إضافة المشروع بنجاح إلى نظامك';
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
+            }, 1200);
+        }
+
+        // Shortcut listener
+        window.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                document.querySelector('input[type="text"]').focus();
+            }
+        });
+    </script>
+</body></html>

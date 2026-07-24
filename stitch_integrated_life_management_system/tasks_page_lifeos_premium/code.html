@@ -1,0 +1,589 @@
+<!DOCTYPE html><html dir="rtl" lang="ar"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>LifeOS - المهام (Emerald Premium)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;800&amp;family=Noto+Sans+Arabic:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body {
+            font-family: 'Hanken Grotesk', 'Noto Sans Arabic', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            vertical-align: middle;
+        }
+        .glass-panel {
+            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.85);
+        }
+        .sidebar-transition {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-expanded { width: 256px; }
+        .sidebar-collapsed { width: 80px; }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+    </style>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {primary: "#006c49", "on-primary": "#ffffff", "primary-container": "#10b981", "on-primary-container": "#00422b", surface: "#f8f9ff", "on-surface": "#0b1c30", "surface-variant": "#d3e4fe", "on-surface-variant": "#3c4a42", outline: "#6c7a71", "outline-variant": "#bbcabf", "surface-container-lowest": "#ffffff", "surface-container-low": "#eff4ff", "surface-container": "#e5eeff", "surface-container-high": "#dce9ff", "surface-container-highest": "#d3e4fe", error: "#ba1a1a", "on-primary-fixed": "#002113", tertiary: "#55615a", "on-secondary-fixed": "#002117", "inverse-on-surface": "#eaf1ff", "error-container": "#ffdad6", "surface-dim": "#cbdbf5", "secondary-fixed-dim": "#95d3ba", "on-background": "#0b1c30", "surface-tint": "#006c49", "on-error": "#ffffff", "secondary-container": "#adedd3", "primary-fixed": "#6ffbbe", "on-error-container": "#93000a", "secondary-fixed": "#b0f0d6", "tertiary-fixed-dim": "#bdcac1", "tertiary-container": "#99a69e", "tertiary-fixed": "#d9e6dd", "on-tertiary": "#ffffff", "on-primary-fixed-variant": "#005236", "on-tertiary-fixed": "#131e19", "on-secondary-fixed-variant": "#0b513d", "on-secondary-container": "#306d58", "on-tertiary-container": "#303c36", secondary: "#2b6954", "surface-bright": "#f8f9ff", "on-tertiary-fixed-variant": "#3e4943", "on-secondary": "#ffffff", "inverse-surface": "#213145", "primary-fixed-dim": "#4edea3", "inverse-primary": "#4edea3", background: "#f8f9ff"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, fontFamily: {headline: ["Hanken Grotesk"], display: ["Hanken Grotesk"], body: ["Hanken Grotesk"], label: ["Hanken Grotesk"]}, fontSize: {}}}};</script>
+</head>
+<body class="bg-surface text-on-surface overflow-x-hidden min-h-screen flex">
+<!-- Collapsible Right Sidebar -->
+<aside class="fixed right-0 top-0 h-screen flex flex-col z-50 bg-surface-container-lowest border-l border-outline-variant sidebar-transition sidebar-expanded hidden md:flex" id="main-sidebar">
+<div class="flex items-center justify-between p-4 mb-4">
+<div class="flex items-center gap-3 overflow-hidden whitespace-nowrap" id="sidebar-logo">
+<div class="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center text-white flex-shrink-0">
+<span class="material-symbols-outlined font-black">token</span>
+</div>
+<div class="sidebar-text-content">
+<h1 class="font-bold text-xl text-primary leading-tight">LifeOS</h1>
+<p class="text-on-surface-variant text-[10px] uppercase tracking-wider font-bold">Premium</p>
+</div>
+</div>
+<button class="p-2 hover:bg-surface-container-low rounded-lg transition-colors" id="sidebar-toggle">
+<span class="material-symbols-outlined text-on-surface-variant" id="toggle-icon">chevron_right</span>
+</button>
+</div>
+<nav class="flex-1 px-3 space-y-1 overflow-y-auto no-scrollbar">
+<a class="flex items-center gap-4 px-3 py-3 text-on-surface-variant hover:bg-surface-container-low transition-all rounded-xl group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">home</span>
+<span class="text-sm font-semibold sidebar-text-content whitespace-nowrap">الرئيسية</span>
+</a>
+<a class="flex items-center gap-4 px-3 py-3 bg-primary-container/10 text-primary rounded-xl font-bold group" href="#">
+<span class="material-symbols-outlined">task_alt</span>
+<span class="text-sm sidebar-text-content whitespace-nowrap">المهام</span>
+</a>
+<a class="flex items-center gap-4 px-3 py-3 text-on-surface-variant hover:bg-surface-container-low transition-all rounded-xl group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">grid_view</span>
+<span class="text-sm font-semibold sidebar-text-content whitespace-nowrap">المراكز (Hubs)</span>
+</a>
+<a class="flex items-center gap-4 px-3 py-3 text-on-surface-variant hover:bg-surface-container-low transition-all rounded-xl group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">folder_open</span>
+<span class="text-sm font-semibold sidebar-text-content whitespace-nowrap">المشاريع</span>
+</a>
+<a class="flex items-center gap-4 px-3 py-3 text-on-surface-variant hover:bg-surface-container-low transition-all rounded-xl group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">assignment</span>
+<span class="text-sm font-semibold sidebar-text-content whitespace-nowrap">الواجبات</span>
+</a>
+<a class="flex items-center gap-4 px-3 py-3 text-on-surface-variant hover:bg-surface-container-low transition-all rounded-xl group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">favorite</span>
+<span class="text-sm font-semibold sidebar-text-content whitespace-nowrap">الصحة</span>
+</a>
+<a class="flex items-center gap-4 px-3 py-3 text-on-surface-variant hover:bg-surface-container-low transition-all rounded-xl group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">calendar_today</span>
+<span class="text-sm font-semibold sidebar-text-content whitespace-nowrap">التقويم</span>
+</a>
+</nav>
+<div class="mt-auto p-4 border-t border-outline-variant">
+<a class="flex items-center gap-4 px-3 py-3 text-on-surface-variant hover:bg-surface-container-low transition-all rounded-xl group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">settings</span>
+<span class="text-sm font-semibold sidebar-text-content whitespace-nowrap">الإعدادات</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 md:mr-64 h-screen flex flex-col bg-surface overflow-hidden relative transition-all duration-300" id="main-content">
+<!-- Top Nav Bar -->
+<header class="sticky top-0 z-40 w-full flex justify-between items-center px-8 h-16 glass-panel border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<h2 class="font-bold text-xl text-on-surface">المهام</h2>
+<span class="text-on-surface-variant text-xs hidden lg:inline-block px-3 py-1 bg-surface-container rounded-full">إدارة وتنظيم المهام اليومية</span>
+</div>
+<div class="flex items-center gap-4 flex-1 max-w-xl mx-8">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pr-10 pl-4 py-2 bg-surface-container-low rounded-full border border-outline-variant focus:ring-2 focus:ring-primary-container focus:border-transparent text-sm transition-all" placeholder="ابحث عن مهمة..." type="text">
+</div>
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all text-sm font-semibold">
+<span class="material-symbols-outlined text-xl">filter_list</span>
+<span>تصفية</span>
+</button>
+</div>
+<div class="flex items-center gap-3">
+<div class="relative group">
+<span class="material-symbols-outlined p-2 hover:bg-surface-container-low rounded-full cursor-pointer text-on-surface-variant transition-colors">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full ring-2 ring-surface"></span>
+</div>
+<span class="material-symbols-outlined p-2 hover:bg-surface-container-low rounded-full cursor-pointer text-on-surface-variant">apps</span>
+<div class="flex items-center gap-3 mr-2 pr-4 border-r border-outline-variant">
+<div class="text-left hidden sm:block">
+<p class="font-bold text-sm leading-none">أحمد محمد</p>
+<p class="text-[10px] text-on-surface-variant mt-1 font-bold">حساب بريميوم</p>
+</div>
+<img class="w-10 h-10 rounded-full border-2 border-primary-container object-cover shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAd0OJNy9CvHEuXIRAJIAKtL0_OtacqgJM2r4EwImiVC2ZD6lYxBe_q-NT8iRVldnHbZqhrCLzOMqxrgysWhVfaS6ZAwC73U1sOqADwm4FU-qPlfKeOyfwEsP0tIK4sLJLLfWrf_kiL4XVYtumFOim9C1h88LAXffDFbLfp_S2xG0s3s6VaCjwa8E0_DJPN3aemKoQcVwxCKSQcIoiqd3v_nq45mXWtsjAI91Amzy_WJhppmY9MF3HA">
+</div>
+</div>
+</header>
+<!-- Scrollable Body -->
+<div class="flex-1 overflow-y-auto p-8 pb-20">
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/30 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-surface-container rounded-xl flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-2xl">list_alt</span>
+</div>
+<span class="text-[10px] font-bold text-outline uppercase tracking-wider">الإجمالي</span>
+</div>
+<h3 class="text-3xl font-black text-on-surface">24</h3>
+<p class="text-xs text-on-surface-variant mt-1">جميع المهام النشطة</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-2xl border-r-4 border-primary-container shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-primary-container/10 rounded-xl flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-2xl">pending</span>
+</div>
+<span class="text-[10px] font-bold text-primary-container uppercase tracking-wider">نشط</span>
+</div>
+<h3 class="text-3xl font-black text-on-surface">10</h3>
+<p class="text-xs text-on-surface-variant mt-1">مهام قيد العمل</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/30 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-primary/5 rounded-xl flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl">check_circle</span>
+</div>
+<span class="text-[10px] font-bold text-primary uppercase tracking-wider">مكتمل</span>
+</div>
+<h3 class="text-3xl font-black text-on-surface">8</h3>
+<p class="text-xs text-on-surface-variant mt-1">تم إنجازها اليوم</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/30 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-error/5 rounded-xl flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-2xl">schedule</span>
+</div>
+<span class="text-[10px] font-bold text-error uppercase tracking-wider">مؤجل</span>
+</div>
+<h3 class="text-3xl font-black text-on-surface">4</h3>
+<p class="text-xs text-on-surface-variant mt-1">مهام تنتظر الجدولة</p>
+</div>
+</div>
+<!-- Controls Area -->
+<div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
+<div class="flex bg-surface-container-low p-1.5 rounded-2xl w-full md:w-auto overflow-x-auto no-scrollbar border border-outline-variant/30">
+<button class="px-6 py-2.5 bg-surface-container-lowest shadow-sm text-primary rounded-xl font-bold whitespace-nowrap text-sm">جميع المهام</button>
+<button class="px-6 py-2.5 text-on-surface-variant hover:text-primary transition-colors whitespace-nowrap text-sm font-semibold">لم تبدأ</button>
+<button class="px-6 py-2.5 text-on-surface-variant hover:text-primary transition-colors whitespace-nowrap text-sm font-semibold">قيد التنفيذ</button>
+<button class="px-6 py-2.5 text-on-surface-variant hover:text-primary transition-colors whitespace-nowrap text-sm font-semibold">مكتملة</button>
+</div>
+<div class="flex items-center gap-4 w-full md:w-auto">
+<div class="flex border border-outline-variant rounded-xl overflow-hidden bg-surface-container-lowest">
+<button class="p-2.5 text-outline hover:bg-surface-container-low transition-colors border-l border-outline-variant"><span class="material-symbols-outlined">format_list_bulleted</span></button>
+<button class="p-2.5 bg-primary-container/10 text-primary-container"><span class="material-symbols-outlined">grid_view</span></button>
+</div>
+<button class="flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-3 bg-primary-container text-white rounded-2xl font-bold hover:shadow-lg hover:brightness-110 active:scale-95 transition-all" id="open-drawer">
+<span class="material-symbols-outlined">add</span>
+<span>إضافة مهمة</span>
+</button>
+</div>
+</div>
+<!-- High Fidelity Task Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Task Card 1 -->
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm hover:shadow-xl transition-all group cursor-pointer flex flex-col task-row overflow-hidden">
+<div class="p-6 flex-1">
+<div class="flex justify-between items-start mb-4">
+<div class="flex flex-wrap gap-2">
+<span class="px-2.5 py-1 bg-surface-container-highest text-primary text-[10px] font-bold rounded-lg uppercase tracking-wider">التطوير الشخصي</span>
+<span class="px-2.5 py-1 bg-error/10 text-error text-[10px] font-bold rounded-lg uppercase tracking-wider">أولوية عالية</span>
+</div>
+<button class="text-outline hover:text-on-surface p-1 rounded-lg hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<div class="flex gap-4">
+<div class="mt-1 w-6 h-6 flex-shrink-0 border-2 border-outline-variant rounded-full flex items-center justify-center group-hover:border-primary-container transition-colors"></div>
+<div>
+<h4 class="font-bold text-on-surface text-lg mb-2 group-hover:text-primary transition-colors">قراءة كتاب الذكاء العاطفي</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed line-clamp-2">قراءة فصلين على الأقل وتلخيص أهم النقاط المستفادة وتطبيقها في الحياة العملية خلال الأسبوع القادم.</p>
+</div>
+</div>
+</div>
+<div class="px-6 py-4 bg-surface-container-low/50 border-t border-outline-variant/20 flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">calendar_today</span>
+<span class="text-[11px] font-bold uppercase">25 مايو</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full border-2 border-surface-container-lowest bg-surface-container flex items-center justify-center text-[10px] font-bold text-on-surface shadow-sm">A</div>
+</div>
+</div>
+</div>
+<!-- Task Card 2 -->
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm hover:shadow-xl transition-all group cursor-pointer flex flex-col task-row overflow-hidden">
+<div class="p-6 flex-1">
+<div class="flex justify-between items-start mb-4">
+<div class="flex flex-wrap gap-2">
+<span class="px-2.5 py-1 bg-primary/10 text-primary text-[10px] font-bold rounded-lg uppercase tracking-wider">العمل</span>
+<span class="px-2.5 py-1 bg-amber-500/10 text-amber-600 text-[10px] font-bold rounded-lg uppercase tracking-wider">متوسطة</span>
+</div>
+<button class="text-outline hover:text-on-surface p-1 rounded-lg hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<div class="flex gap-4">
+<div class="mt-1 w-6 h-6 flex-shrink-0 border-2 border-outline-variant rounded-full flex items-center justify-center"></div>
+<div>
+<h4 class="font-bold text-on-surface text-lg mb-2">إنجاز تقرير المشروع</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed line-clamp-2">إعداد تقرير شامل عن تقدم العمل والمهام المنجزة خلال الأسبوع الماضي بالتفصيل.</p>
+</div>
+</div>
+</div>
+<div class="px-6 py-4 bg-surface-container-low/50 border-t border-outline-variant/20 flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">calendar_today</span>
+<span class="text-[11px] font-bold uppercase">26 مايو</span>
+</div>
+<span class="px-3 py-1 bg-surface-container-highest text-primary text-[10px] font-black rounded-full">قيد التنفيذ</span>
+</div>
+</div>
+<!-- Task Card 3 -->
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm hover:shadow-xl transition-all group cursor-pointer flex flex-col task-row overflow-hidden opacity-80">
+<div class="p-6 flex-1">
+<div class="flex justify-between items-start mb-4">
+<div class="flex flex-wrap gap-2">
+<span class="px-2.5 py-1 bg-primary/10 text-primary text-[10px] font-bold rounded-lg uppercase tracking-wider">الصحة</span>
+</div>
+<button class="text-outline hover:text-on-surface p-1 rounded-lg hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<div class="flex gap-4">
+<div class="mt-1 w-6 h-6 flex-shrink-0 bg-primary-container rounded-full flex items-center justify-center text-white shadow-sm">
+<span class="material-symbols-outlined text-sm">check</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface-variant text-lg mb-2 line-through">تمارين رياضية</h4>
+<p class="text-sm text-outline leading-relaxed line-clamp-2">ممارسة 30 دقيقة تمارين كارديو وتقوية العضلات في النادي الصحي.</p>
+</div>
+</div>
+</div>
+<div class="px-6 py-4 bg-primary-container/5 border-t border-primary-container/10 flex items-center justify-between">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-lg">check_circle</span>
+<span class="text-[11px] font-black uppercase">تم الإنجاز</span>
+</div>
+<div class="text-[10px] font-bold text-outline uppercase tracking-wider">اليوم، 09:00 ص</div>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-10 flex items-center justify-between text-on-surface-variant">
+<p class="text-xs font-semibold">عرض 1 - 3 من 24 مهمة</p>
+<div class="flex gap-2">
+<button class="w-9 h-9 flex items-center justify-center border border-outline-variant rounded-xl hover:bg-surface-container transition-colors"><span class="material-symbols-outlined">chevron_right</span></button>
+<button class="w-9 h-9 flex items-center justify-center bg-primary-container text-white rounded-xl font-bold shadow-sm">1</button>
+<button class="w-9 h-9 flex items-center justify-center border border-outline-variant rounded-xl hover:bg-surface-container transition-colors">2</button>
+<button class="w-9 h-9 flex items-center justify-center border border-outline-variant rounded-xl hover:bg-surface-container transition-colors">3</button>
+<button class="w-9 h-9 flex items-center justify-center border border-outline-variant rounded-xl hover:bg-surface-container transition-colors"><span class="material-symbols-outlined">chevron_left</span></button>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="mt-auto w-full py-12 px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 bg-surface-container-lowest border-t border-outline-variant/30">
+<div class="space-y-4">
+<div class="flex items-center gap-2 text-primary-container">
+<span class="material-symbols-outlined text-2xl font-black">token</span>
+<h4 class="font-black text-2xl">LifeOS</h4>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed max-w-xs">النظام المتكامل لإدارة الإنتاجية الشخصية والمهنية بأسلوب عصري وبسيط.</p>
+</div>
+<div>
+<h5 class="text-on-surface font-black mb-6 text-sm uppercase tracking-widest">الروابط السريعة</h5>
+<ul class="space-y-3 text-sm text-on-surface-variant font-semibold">
+<li><a class="hover:text-primary-container transition-colors" href="#">لوحة التحكم</a></li>
+<li><a class="hover:text-primary-container transition-colors" href="#">المميزات</a></li>
+<li><a class="hover:text-primary-container transition-colors" href="#">دليل المستخدم</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-on-surface font-black mb-6 text-sm uppercase tracking-widest">الدعم</h5>
+<ul class="space-y-3 text-sm text-on-surface-variant font-semibold">
+<li><a class="hover:text-primary-container transition-colors" href="#">مركز المساعدة</a></li>
+<li><a class="hover:text-primary-container transition-colors" href="#">سياسة الخصوصية</a></li>
+</ul>
+</div>
+<div class="flex flex-col items-start lg:items-end gap-6">
+<p class="text-outline text-xs font-bold">© 2025 LifeOS. جميع الحقوق محفوظة.</p>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-2xl cursor-pointer text-outline hover:text-primary-container transition-all">share</span>
+<span class="material-symbols-outlined text-2xl cursor-pointer text-outline hover:text-primary-container transition-all">mail</span>
+<span class="material-symbols-outlined text-2xl cursor-pointer text-outline hover:text-primary-container transition-all">language</span>
+</div>
+</div>
+</footer>
+</main>
+<!-- Overlay Backdrop -->
+<div class="fixed inset-0 bg-on-surface/40 backdrop-blur-sm z-[60] hidden transition-opacity duration-300 opacity-0" id="global-overlay"></div>
+<!-- Add Task Drawer -->
+<aside class="fixed left-0 top-0 h-screen w-full max-w-md bg-surface-container-lowest shadow-2xl z-[70] -translate-x-full transition-transform duration-500 ease-in-out flex flex-col" id="task-drawer">
+<div class="p-8 border-b border-outline-variant flex items-center justify-between bg-surface-container-low">
+<h2 class="text-2xl font-black text-on-surface">إضافة مهمة جديدة</h2>
+<button class="p-2.5 hover:bg-surface-container rounded-full text-outline hover:text-on-surface transition-all" id="close-drawer">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto p-8 space-y-8">
+<div>
+<label class="block font-black text-sm mb-3 uppercase tracking-wider text-on-surface-variant">عنوان المهمة *</label>
+<input class="w-full px-5 py-4 rounded-2xl border border-outline-variant bg-surface-container-low focus:ring-2 focus:ring-primary-container focus:bg-white transition-all text-sm font-semibold" placeholder="ماذا تريد إنجازه؟" type="text">
+</div>
+<div>
+<label class="block font-black text-sm mb-3 uppercase tracking-wider text-on-surface-variant">الوصف</label>
+<textarea class="w-full px-5 py-4 rounded-2xl border border-outline-variant bg-surface-container-low focus:ring-2 focus:ring-primary-container focus:bg-white transition-all text-sm font-semibold resize-none" placeholder="أضف بعض التفاصيل هنا..." rows="4"></textarea>
+</div>
+<div class="grid grid-cols-2 gap-6">
+<div>
+<label class="block font-black text-sm mb-3 uppercase tracking-wider text-on-surface-variant">المركز (Hub)</label>
+<select class="w-full px-5 py-4 rounded-2xl border border-outline-variant bg-surface-container-low text-sm font-semibold outline-none appearance-none cursor-pointer">
+<option>عام</option>
+<option>التطوير الشخصي</option>
+<option>العمل</option>
+<option>الصحة</option>
+</select>
+</div>
+<div>
+<label class="block font-black text-sm mb-3 uppercase tracking-wider text-on-surface-variant">الأولوية</label>
+<select class="w-full px-5 py-4 rounded-2xl border border-outline-variant bg-surface-container-low text-sm font-semibold outline-none appearance-none cursor-pointer">
+<option>عادية</option>
+<option class="text-amber-600">متوسطة</option>
+<option class="text-error font-bold">عالية</option>
+</select>
+</div>
+</div>
+<div>
+<label class="block font-black text-sm mb-3 uppercase tracking-wider text-on-surface-variant">تاريخ الاستحقاق</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline">calendar_today</span>
+<input class="w-full pr-12 pl-5 py-4 rounded-2xl border border-outline-variant bg-surface-container-low text-sm font-semibold outline-none" type="date">
+</div>
+</div>
+</div>
+<div class="p-8 border-t border-outline-variant bg-surface-container-low flex gap-4">
+<button class="flex-1 py-4 border border-outline-variant rounded-2xl font-black text-on-surface-variant hover:bg-surface-container transition-all text-sm uppercase tracking-widest" id="cancel-task">إلغاء</button>
+<button class="flex-1 py-4 bg-primary-container text-white rounded-2xl font-black hover:shadow-xl hover:brightness-110 active:scale-95 transition-all text-sm uppercase tracking-widest" id="save-task">حفظ المهمة</button>
+</div>
+</aside>
+<!-- Task Details Modal -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center p-4 hidden" id="task-modal">
+<div class="bg-surface-container-lowest w-full max-w-4xl rounded-[2rem] shadow-2xl overflow-hidden flex flex-col max-h-[921px] scale-95 transition-transform duration-300 ease-out" id="modal-container">
+<div class="p-8 border-b border-outline-variant flex items-center justify-between bg-surface-container-low">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-primary-container/10 rounded-2xl flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-3xl">task_alt</span>
+</div>
+<div>
+<h3 class="text-2xl font-black text-on-surface">تفاصيل المهمة</h3>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mt-1">تطوير شخصي • مهمة نشطة</p>
+</div>
+</div>
+<button class="p-3 hover:bg-surface-container rounded-full text-outline transition-all" id="close-modal">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto p-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
+<div class="lg:col-span-2 space-y-10">
+<div>
+<div class="flex items-center gap-4 mb-4">
+<h1 class="text-3xl font-black text-on-surface">قراءة كتاب الذكاء العاطفي</h1>
+<span class="material-symbols-outlined text-amber-400 text-3xl" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="text-on-surface-variant leading-relaxed text-lg font-medium">قراءة فصلين على الأقل وتلخيص أهم النقاط المستفادة وتطبيقها في الحياة العملية خلال الأسبوع القادم.</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/30">
+<p class="text-[10px] text-outline font-black mb-2 uppercase tracking-widest">المركز</p>
+<p class="text-sm font-black text-primary">تطوير شخصي</p>
+</div>
+<div class="bg-error/5 p-5 rounded-2xl border border-error/10">
+<p class="text-[10px] text-error/60 font-black mb-2 uppercase tracking-widest">الأولوية</p>
+<p class="text-sm font-black text-error">عالية جداً</p>
+</div>
+<div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/30">
+<p class="text-[10px] text-outline font-black mb-2 uppercase tracking-widest">البدء</p>
+<p class="text-sm font-black text-on-surface">20 مايو</p>
+</div>
+<div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/30">
+<p class="text-[10px] text-outline font-black mb-2 uppercase tracking-widest">الاستحقاق</p>
+<p class="text-sm font-black text-on-surface">25 مايو</p>
+</div>
+</div>
+<div>
+<h4 class="font-black text-on-surface mb-6 flex items-center gap-3 text-lg uppercase tracking-wider">
+<span class="material-symbols-outlined text-primary-container">format_list_bulleted</span>
+                        المهام الفرعية
+                    </h4>
+<div class="space-y-4">
+<div class="flex items-center gap-4 p-4 bg-primary-container/5 rounded-2xl border border-primary-container/20 group">
+<span class="material-symbols-outlined text-primary-container text-2xl">check_circle</span>
+<span class="text-sm font-bold text-on-surface">قراءة الفصل الأول: الذكاء الوجداني</span>
+</div>
+<div class="flex items-center gap-4 p-4 bg-surface-container-low rounded-2xl border border-outline-variant/30 hover:border-primary-container transition-all group">
+<div class="w-6 h-6 border-2 border-outline-variant rounded-full group-hover:border-primary-container transition-colors"></div>
+<span class="text-sm font-bold text-on-surface">تلخيص أهم النقاط وتدوين الملاحظات</span>
+</div>
+<button class="w-full py-5 border-2 border-dashed border-outline-variant rounded-2xl text-outline text-sm font-black hover:border-primary-container hover:text-primary transition-all flex items-center justify-center gap-3">
+<span class="material-symbols-outlined">add</span>
+                            إضافة خطوة جديدة
+                        </button>
+</div>
+</div>
+</div>
+<div class="space-y-8">
+<div class="bg-surface-container-low p-8 rounded-3xl border border-outline-variant/30">
+<h5 class="font-black text-sm mb-6 uppercase tracking-widest text-on-surface-variant">الإجراءات السريعة</h5>
+<div class="space-y-3">
+<button class="w-full flex items-center gap-4 px-5 py-4 bg-white border border-outline-variant rounded-2xl text-sm font-bold hover:shadow-md hover:border-primary-container transition-all">
+<span class="material-symbols-outlined text-outline">edit</span> تعديل
+                        </button>
+<button class="w-full flex items-center gap-4 px-5 py-4 bg-white border border-outline-variant rounded-2xl text-sm font-bold hover:shadow-md hover:border-primary-container transition-all">
+<span class="material-symbols-outlined text-outline">content_copy</span> تكرار
+                        </button>
+<button class="w-full flex items-center gap-4 px-5 py-4 bg-white border border-outline-variant rounded-2xl text-sm font-bold text-error hover:bg-error/5 hover:border-error transition-all">
+<span class="material-symbols-outlined">delete</span> حذف المهمة
+                        </button>
+</div>
+</div>
+<div class="bg-primary-container/10 p-8 rounded-3xl border border-primary-container/20">
+<h5 class="font-black text-sm mb-6 uppercase tracking-widest text-primary">التذكيرات</h5>
+<div class="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm border border-primary-container/10">
+<span class="material-symbols-outlined text-primary-container">notifications_active</span>
+<div>
+<p class="text-[11px] font-black text-on-surface uppercase tracking-widest">قبل يوم واحد</p>
+<p class="text-[10px] text-on-surface-variant mt-1">24 مايو 2025 - 09:00 ص</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="p-8 border-t border-outline-variant bg-surface-container-low flex justify-end gap-4">
+<button class="px-10 py-4 bg-white border border-outline-variant rounded-2xl font-black text-on-surface-variant hover:bg-surface-container transition-all text-sm uppercase tracking-widest" id="close-modal-btn">إغلاق</button>
+<button class="px-10 py-4 bg-primary-container text-white rounded-2xl font-black shadow-lg hover:shadow-2xl hover:brightness-110 active:scale-95 transition-all text-sm uppercase tracking-widest">حفظ التعديلات</button>
+</div>
+</div>
+</div>
+<script>
+    const sidebar = document.getElementById('main-sidebar');
+    const mainContent = document.getElementById('main-content');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const toggleIcon = document.getElementById('toggle-icon');
+    const sidebarText = document.querySelectorAll('.sidebar-text-content');
+    
+    const drawer = document.getElementById('task-drawer');
+    const modal = document.getElementById('task-modal');
+    const modalContainer = document.getElementById('modal-container');
+    const overlay = document.getElementById('global-overlay');
+    
+    const openBtn = document.getElementById('open-drawer');
+    const closeBtn = document.getElementById('close-drawer');
+    const closeBtnModal = document.getElementById('close-modal');
+    const closeBtnModal2 = document.getElementById('close-modal-btn');
+    const cancelBtn = document.getElementById('cancel-task');
+    const saveBtn = document.getElementById('save-task');
+    const taskRows = document.querySelectorAll('.task-row');
+
+    // Sidebar Toggle Logic
+    let isCollapsed = false;
+    sidebarToggle.addEventListener('click', () => {
+        isCollapsed = !isCollapsed;
+        if (isCollapsed) {
+            sidebar.classList.remove('sidebar-expanded');
+            sidebar.classList.add('sidebar-collapsed');
+            mainContent.classList.remove('md:mr-64');
+            mainContent.classList.add('md:mr-20');
+            toggleIcon.style.transform = 'rotate(180deg)';
+            sidebarText.forEach(el => el.classList.add('hidden'));
+        } else {
+            sidebar.classList.add('sidebar-expanded');
+            sidebar.classList.remove('sidebar-collapsed');
+            mainContent.classList.add('md:mr-64');
+            mainContent.classList.remove('md:mr-20');
+            toggleIcon.style.transform = 'rotate(0deg)';
+            sidebarText.forEach(el => el.classList.remove('hidden'));
+        }
+    });
+
+    // Drawer Logic
+    const toggleDrawer = (isOpen) => {
+        if (isOpen) {
+            overlay.classList.remove('hidden');
+            setTimeout(() => {
+                overlay.classList.remove('opacity-0');
+                overlay.classList.add('opacity-100');
+                drawer.classList.remove('-translate-x-full');
+                drawer.classList.add('translate-x-0');
+            }, 10);
+        } else {
+            drawer.classList.add('-translate-x-full');
+            drawer.classList.remove('translate-x-0');
+            overlay.classList.add('opacity-0');
+            overlay.classList.remove('opacity-100');
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 500);
+        }
+    };
+
+    // Modal Logic
+    const toggleModal = (isOpen) => {
+        if (isOpen) {
+            overlay.classList.remove('hidden');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                overlay.classList.remove('opacity-0');
+                overlay.classList.add('opacity-100');
+                modalContainer.classList.remove('scale-95');
+                modalContainer.classList.add('scale-100');
+            }, 10);
+        } else {
+            modalContainer.classList.remove('scale-100');
+            modalContainer.classList.add('scale-95');
+            overlay.classList.add('opacity-0');
+            overlay.classList.remove('opacity-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                overlay.classList.add('hidden');
+            }, 300);
+        }
+    };
+
+    openBtn.addEventListener('click', () => toggleDrawer(true));
+    closeBtn.addEventListener('click', () => toggleDrawer(false));
+    cancelBtn.addEventListener('click', () => toggleDrawer(false));
+    saveBtn.addEventListener('click', () => {
+        alert('تم حفظ المهمة بنجاح!');
+        toggleDrawer(false);
+    });
+
+    overlay.addEventListener('click', () => {
+        toggleDrawer(false);
+        toggleModal(false);
+    });
+
+    taskRows.forEach(row => {
+        row.addEventListener('click', (e) => {
+            if (!e.target.closest('button') && !e.target.closest('.w-6')) {
+                toggleModal(true);
+            }
+        });
+    });
+
+    closeBtnModal.addEventListener('click', () => toggleModal(false));
+    closeBtnModal2.addEventListener('click', () => toggleModal(false));
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            toggleDrawer(false);
+            toggleModal(false);
+        }
+    });
+</script>
+</body></html>

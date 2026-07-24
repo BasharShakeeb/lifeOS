@@ -1,0 +1,447 @@
+<!DOCTYPE html><html class="light" dir="rtl" lang="ar"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>LifeOS - العادات</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"surface-container-highest": "#d3e4fe", "primary-container": "#10b981", "inverse-surface": "#213145", "secondary-fixed": "#b0f0d6", "surface-variant": "#d3e4fe", "surface-container": "#e5eeff", "surface-tint": "#006c49", "tertiary-container": "#99a69e", "on-primary-fixed": "#002113", "on-error-container": "#93000a", outline: "#6c7a71", "on-tertiary-fixed": "#131e19", "on-secondary-container": "#306d58", "on-primary": "#ffffff", "outline-variant": "#bbcabf", error: "#ba1a1a", "error-container": "#ffdad6", "on-tertiary-fixed-variant": "#3e4943", "tertiary-fixed-dim": "#bdcac1", surface: "#f8f9ff", "tertiary-fixed": "#d9e6dd", "on-surface-variant": "#3c4a42", background: "#f8f9ff", "on-primary-fixed-variant": "#005236", "surface-dim": "#cbdbf5", "surface-bright": "#f8f9ff", "primary-fixed-dim": "#4edea3", "on-tertiary": "#ffffff", "on-error": "#ffffff", "inverse-primary": "#4edea3", "secondary-fixed-dim": "#95d3ba", secondary: "#2b6954", "surface-container-high": "#dce9ff", "on-secondary-fixed": "#002117", "on-secondary": "#ffffff", "on-tertiary-container": "#303c36", primary: "#006c49", "primary-fixed": "#6ffbbe", "on-background": "#0b1c30", "on-secondary-fixed-variant": "#0b513d", tertiary: "#55615a", "surface-container-low": "#eff4ff", "on-primary-container": "#00422b", "inverse-on-surface": "#eaf1ff", "surface-container-lowest": "#ffffff", "secondary-container": "#adedd3", "on-surface": "#0b1c30"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {"sidebar-collapsed": "80px", "sidebar-expanded": "256px", "stack-sm": "8px", "stack-md": "16px", gutter: "24px", "margin-page": "32px"}, fontFamily: {hanken: ["Hanken Grotesk", "sans-serif"], headline: ["Hanken Grotesk"], display: ["Hanken Grotesk"], body: ["Hanken Grotesk"], label: ["Hanken Grotesk"]}, fontSize: {}}}};</script>
+<style>
+        body { font-family: 'Hanken Grotesk', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            user-select: none;
+        }
+        .sidebar-transition {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-text-transition {
+            transition: opacity 0.2s ease-in-out;
+        }
+        .sidebar-collapsed .sidebar-text {
+            opacity: 0;
+            width: 0;
+            pointer-events: none;
+        }
+        .sidebar-collapsed .sidebar-logo-text {
+            opacity: 0;
+            width: 0;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+        
+        .drawer-left {
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .drawer-left.open {
+            transform: translateX(0);
+        }
+        .overlay {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface antialiased overflow-x-hidden">
+<!-- Right Sidebar Navigation (Collapsible) -->
+<aside class="fixed right-0 top-0 h-full w-sidebar-expanded border-l border-outline-variant bg-white z-40 flex flex-col sidebar-transition" id="main-sidebar">
+<div class="p-6 flex items-center justify-between">
+<div class="flex items-center gap-3 overflow-hidden">
+<div class="w-10 h-10 min-w-[40px] bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">eco</span>
+</div>
+<div class="sidebar-logo-text sidebar-text-transition">
+<h1 class="text-xl font-bold text-primary leading-none">LifeOS</h1>
+<p class="text-[10px] text-on-surface-variant whitespace-nowrap">الإنتاجية المتميزة</p>
+</div>
+</div>
+<button class="p-1 hover:bg-surface-container rounded-lg transition-colors" onclick="toggleSidebar()">
+<span class="material-symbols-outlined text-outline" id="collapse-icon">menu_open</span>
+</button>
+</div>
+<nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto custom-scrollbar">
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">dashboard</span>
+<span class="font-medium sidebar-text sidebar-text-transition">لوحة القيادة</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">checklist</span>
+<span class="font-medium sidebar-text sidebar-text-transition">المهام</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">hub</span>
+<span class="font-medium sidebar-text sidebar-text-transition">المراكز</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">account_tree</span>
+<span class="font-medium sidebar-text sidebar-text-transition">المشاريع</span>
+</a>
+<!-- ACTIVE: العادات -->
+<a class="flex items-center gap-4 px-4 py-3 bg-primary text-white rounded-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">repeat</span>
+<span class="font-bold sidebar-text sidebar-text-transition">العادات</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">emoji_events</span>
+<span class="font-medium sidebar-text sidebar-text-transition">الأهداف</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">monitor_heart</span>
+<span class="font-medium sidebar-text sidebar-text-transition">الصحة</span>
+</a>
+</nav>
+<div class="p-4 border-t border-outline-variant">
+<button class="flex items-center gap-4 px-4 py-3 w-full text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors group">
+<span class="material-symbols-outlined group-hover:text-primary">logout</span>
+<span class="font-medium sidebar-text sidebar-text-transition">تسجيل الخروج</span>
+</button>
+</div>
+</aside>
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 left-0 right-sidebar-expanded h-16 bg-white/80 backdrop-blur-md z-30 flex items-center justify-between px-margin-page border-b border-outline-variant sidebar-transition" id="top-nav">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline text-xl">search</span>
+<input class="w-full pr-10 pl-4 py-2 bg-surface-container-low border border-transparent rounded-lg focus:ring-2 focus:ring-primary focus:bg-white text-sm outline-none transition-all" placeholder="ابحث عن عادة..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="relative w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="h-6 w-[1px] bg-outline-variant"></div>
+<div class="flex items-center gap-3">
+<div class="text-left hidden sm:block">
+<p class="text-sm font-bold leading-none">أحمد صالح</p>
+<p class="text-[10px] text-on-surface-variant">الخطة المتقدمة</p>
+</div>
+<div class="w-9 h-9 bg-surface-container-highest rounded-full border border-outline-variant overflow-hidden">
+<img alt="avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCb9SasHnG_XYvPLuWoXq1GCBFEbg4PWSE6u1WjPOmmN2cc4yxYS7yFMXyZEqZUuV46OFxNeQzfUGr4rkupJNFSJ4h026P_jIxhFj1Af1wVYR45uCwko6m0m8Z0D6QSwlSX2sasnfQv7DBzFWqRwg25o6UJ_wEEQKXvWocAmDTUZBfYNLpm-izYtSNb7N5epAc3Aqp-EHm3QgliqLkxzd2yki7wBfT5aN0aNZM71FsG6JUlhxPD4oy5WsXsti1HWnp2Wxf7VPclc5w">
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="mr-sidebar-expanded pt-24 pb-12 px-margin-page sidebar-transition" id="main-content">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+<div>
+<h2 class="text-3xl font-bold text-primary mb-2">تتبع العادات</h2>
+<p class="text-on-surface-variant">حوّل أهدافك إلى أفعال يومية مستمرة</p>
+</div>
+<button class="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg font-bold shadow-sm hover:shadow-lg hover:bg-primary-fixed-dim hover:text-on-primary-fixed transition-all active:scale-95" onclick="toggleDrawer()">
+<span class="material-symbols-outlined">add</span>
+<span>إضافة عادة جديدة</span>
+</button>
+</div>
+<!-- Statistics Section -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+<div class="bg-white border border-outline-variant p-6 rounded-xl shadow-sm hover:border-primary/30 transition-colors group">
+<div class="p-3 bg-surface-container w-fit rounded-lg mb-4 group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-primary">analytics</span>
+</div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">جميع العادات</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold">12</span>
+<span class="text-xs text-primary font-bold">عادات كلية</span>
+</div>
+</div>
+<div class="bg-white border border-outline-variant p-6 rounded-xl shadow-sm">
+<div class="p-3 bg-secondary-fixed w-fit rounded-lg mb-4">
+<span class="material-symbols-outlined text-secondary">bolt</span>
+</div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">عادات نشطة</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold">9</span>
+<span class="text-xs text-on-surface-variant">من أصل 12</span>
+</div>
+</div>
+<div class="bg-white border border-outline-variant p-6 rounded-xl shadow-sm">
+<div class="p-3 bg-orange-100 w-fit rounded-lg mb-4">
+<span class="material-symbols-outlined text-orange-600">local_fire_department</span>
+</div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">سلسلة حالية</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold">156</span>
+<span class="text-xs text-on-surface-variant">يوم هذا الشهر</span>
+</div>
+</div>
+<div class="bg-white border border-outline-variant p-6 rounded-xl shadow-sm">
+<div class="p-3 bg-blue-100 w-fit rounded-lg mb-4">
+<span class="material-symbols-outlined text-blue-600">workspace_premium</span>
+</div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">أطول سلسلة</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold">28</span>
+<span class="text-xs text-on-surface-variant">يوم متواصل</span>
+</div>
+</div>
+</div>
+<!-- Habit List Section -->
+<div class="bg-white border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<div class="px-6 py-4 border-b border-outline-variant flex flex-wrap items-center justify-between gap-4">
+<div class="flex items-center gap-6">
+<button class="text-primary font-bold border-b-2 border-primary pb-2 text-sm">جميع العادات</button>
+<button class="text-on-surface-variant pb-2 hover:text-primary transition-colors text-sm">العادات النشطة</button>
+<button class="text-on-surface-variant pb-2 hover:text-primary transition-colors text-sm">مكتملة اليوم</button>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-surface-container rounded-lg transition-colors"><span class="material-symbols-outlined text-outline">tune</span></button>
+<button class="p-2 hover:bg-surface-container rounded-lg transition-colors"><span class="material-symbols-outlined text-outline">grid_view</span></button>
+</div>
+</div>
+<div class="divide-y divide-outline-variant">
+<!-- Habit Row 1 -->
+<div class="p-6 flex flex-col sm:flex-row items-center justify-between gap-6 hover:bg-surface-container-lowest transition-colors group">
+<div class="flex items-center gap-6 w-full sm:w-auto">
+<div class="w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">directions_run</span>
+</div>
+<div>
+<h4 class="font-bold text-lg text-primary mb-1">ممارسة الرياضة</h4>
+<div class="flex items-center gap-4 text-xs text-on-surface-variant">
+<span class="flex items-center gap-1 bg-surface-container px-2 py-1 rounded-full"><span class="material-symbols-outlined text-sm">schedule</span> 07:00 ص</span>
+<span class="flex items-center gap-1 bg-surface-container px-2 py-1 rounded-full"><span class="material-symbols-outlined text-sm">event_repeat</span> يومياً</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between sm:justify-end gap-10 w-full sm:w-auto">
+<div class="text-center">
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider mb-1">سلسلة حالية</p>
+<div class="flex items-center justify-center gap-1 text-primary font-bold">
+<span class="text-lg">12 يوم</span>
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+</div>
+<div class="relative w-16 h-16">
+<svg class="w-full h-full -rotate-90">
+<circle cx="32" cy="32" fill="transparent" r="28" stroke="#f1f5f9" stroke-width="5"></circle>
+<circle cx="32" cy="32" fill="transparent" r="28" stroke="#10b981" stroke-dasharray="176" stroke-dashoffset="24.6" stroke-linecap="round" stroke-width="5"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-xs font-bold text-primary">86%</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 bg-primary/5 text-primary hover:bg-primary hover:text-white rounded-lg transition-all border border-primary/10">
+<span class="material-symbols-outlined">done</span>
+</button>
+<button class="p-2 text-outline hover:text-primary opacity-0 group-hover:opacity-100 transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Habit Row 2 -->
+<div class="p-6 flex flex-col sm:flex-row items-center justify-between gap-6 hover:bg-surface-container-lowest transition-colors group">
+<div class="flex items-center gap-6 w-full sm:w-auto">
+<div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+</div>
+<div>
+<h4 class="font-bold text-lg text-primary mb-1">قراءة 20 صفحة</h4>
+<div class="flex items-center gap-4 text-xs text-on-surface-variant">
+<span class="flex items-center gap-1 bg-surface-container px-2 py-1 rounded-full"><span class="material-symbols-outlined text-sm">schedule</span> 09:00 م</span>
+<span class="flex items-center gap-1 bg-surface-container px-2 py-1 rounded-full"><span class="material-symbols-outlined text-sm">event_repeat</span> يومياً</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between sm:justify-end gap-10 w-full sm:w-auto">
+<div class="text-center">
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider mb-1">سلسلة حالية</p>
+<div class="flex items-center justify-center gap-1 text-on-surface-variant font-bold">
+<span class="text-lg">5 أيام</span>
+<span class="material-symbols-outlined text-lg">local_fire_department</span>
+</div>
+</div>
+<div class="relative w-16 h-16">
+<svg class="w-full h-full -rotate-90">
+<circle cx="32" cy="32" fill="transparent" r="28" stroke="#f1f5f9" stroke-width="5"></circle>
+<circle cx="32" cy="32" fill="transparent" r="28" stroke="#3b82f6" stroke-dasharray="176" stroke-dashoffset="75.6" stroke-linecap="round" stroke-width="5"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-xs font-bold text-blue-600">57%</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white rounded-lg transition-all border border-blue-100">
+<span class="material-symbols-outlined">done</span>
+</button>
+<button class="p-2 text-outline hover:text-primary opacity-0 group-hover:opacity-100 transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Habit Row 3 -->
+<div class="p-6 flex flex-col sm:flex-row items-center justify-between gap-6 hover:bg-surface-container-lowest transition-colors group">
+<div class="flex items-center gap-6 w-full sm:w-auto">
+<div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">self_improvement</span>
+</div>
+<div>
+<h4 class="font-bold text-lg text-primary mb-1">التأمل</h4>
+<div class="flex items-center gap-4 text-xs text-on-surface-variant">
+<span class="flex items-center gap-1 bg-surface-container px-2 py-1 rounded-full"><span class="material-symbols-outlined text-sm">schedule</span> 06:30 ص</span>
+<span class="flex items-center gap-1 bg-surface-container px-2 py-1 rounded-full"><span class="material-symbols-outlined text-sm">event_repeat</span> يومياً</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between sm:justify-end gap-10 w-full sm:w-auto">
+<div class="text-center">
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider mb-1">سلسلة حالية</p>
+<div class="flex items-center justify-center gap-1 text-purple-600 font-bold">
+<span class="text-lg">16 يوم</span>
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+</div>
+<div class="relative w-16 h-16">
+<svg class="w-full h-full -rotate-90">
+<circle cx="32" cy="32" fill="transparent" r="28" stroke="#f1f5f9" stroke-width="5"></circle>
+<circle cx="32" cy="32" fill="transparent" r="28" stroke="#8b5cf6" stroke-dasharray="176" stroke-dashoffset="0" stroke-linecap="round" stroke-width="5"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-xs font-bold text-purple-600">100%</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 bg-green-500 text-white rounded-lg transition-all border border-green-600">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</button>
+<button class="p-2 text-outline hover:text-primary opacity-0 group-hover:opacity-100 transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="px-6 py-4 bg-surface-container-lowest flex items-center justify-between border-t border-outline-variant">
+<span class="text-xs text-on-surface-variant font-bold">عرض 1-3 من 12 عادات</span>
+<div class="flex items-center gap-2">
+<button class="p-2 border border-outline-variant rounded-lg text-sm hover:bg-surface-container transition-colors disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-lg text-xs font-bold">1</button>
+<button class="w-8 h-8 flex items-center justify-center border border-outline-variant rounded-lg text-xs font-bold hover:bg-surface-container transition-colors">2</button>
+<button class="p-2 border border-outline-variant rounded-lg text-sm hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="mr-sidebar-expanded border-t border-outline-variant bg-white py-8 px-margin-page flex flex-col md:flex-row items-center justify-between gap-4 sidebar-transition" id="main-footer">
+<p class="text-sm text-on-surface-variant">© 2024 LifeOS. صُمم بكل حب في العالم العربي</p>
+<div class="flex gap-8">
+<a class="text-xs font-bold text-on-surface-variant hover:text-primary transition-colors" href="#">سياسة الخصوصية</a>
+<a class="text-xs font-bold text-on-surface-variant hover:text-primary transition-colors" href="#">اتفاقية الاستخدام</a>
+<a class="text-xs font-bold text-on-surface-variant hover:text-primary transition-colors" href="#">مركز المساعدة</a>
+</div>
+</footer>
+<!-- Add Habit Drawer -->
+<div class="overlay fixed inset-0 bg-inverse-surface/40 z-50 backdrop-blur-sm" id="drawer-overlay" onclick="toggleDrawer()"></div>
+<div class="drawer-left fixed left-0 top-0 h-full w-full max-w-md bg-white z-[60] shadow-2xl flex flex-col p-8 custom-scrollbar overflow-y-auto" id="habit-drawer">
+<div class="flex items-center justify-between mb-10">
+<div>
+<h2 class="text-2xl font-bold text-primary">إضافة عادة جديدة</h2>
+<p class="text-sm text-on-surface-variant">حدد ملامح روتينك اليومي الجديد</p>
+</div>
+<button class="w-10 h-10 flex items-center justify-center hover:bg-surface-container rounded-full transition-colors" onclick="toggleDrawer()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<form class="space-y-6">
+<div class="space-y-2">
+<label class="text-sm font-bold block">اسم العادة <span class="text-error">*</span></label>
+<input class="w-full px-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="مثلاً: قراءة الصباح" type="text">
+</div>
+<div class="space-y-2">
+<label class="text-sm font-bold block">الهدف من العادة</label>
+<textarea class="w-full px-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none resize-none transition-all" placeholder="ما الذي تأمل تحقيقه من خلال هذه العادة؟" rows="3"></textarea>
+</div>
+<div class="space-y-3">
+<label class="text-sm font-bold block">الأيقونة واللون</label>
+<div class="flex gap-4 items-center">
+<button class="w-14 h-14 bg-primary text-white rounded-xl flex items-center justify-center text-2xl shadow-md" type="button"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">eco</span></button>
+<div class="flex-1 grid grid-cols-5 gap-2">
+<div class="w-8 h-8 rounded-full bg-primary cursor-pointer border-2 border-white ring-2 ring-primary"></div>
+<div class="w-8 h-8 rounded-full bg-blue-500 cursor-pointer border-2 border-white ring-1 ring-outline-variant"></div>
+<div class="w-8 h-8 rounded-full bg-purple-500 cursor-pointer border-2 border-white ring-1 ring-outline-variant"></div>
+<div class="w-8 h-8 rounded-full bg-orange-500 cursor-pointer border-2 border-white ring-1 ring-outline-variant"></div>
+<div class="w-8 h-8 rounded-full bg-rose-500 cursor-pointer border-2 border-white ring-1 ring-outline-variant"></div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="text-sm font-bold block">التكرار</label>
+<select class="w-full px-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none">
+<option>يومي</option>
+<option>أسبوعي</option>
+<option>أيام محددة</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-bold block">التوقيت المفضل</label>
+<input class="w-full px-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none" type="time" value="07:00">
+</div>
+</div>
+<div class="p-4 bg-surface-container-low rounded-xl border border-outline-variant">
+<div class="flex items-center justify-between mb-2">
+<span class="text-sm font-bold">تفعيل التذكيرات</span>
+<div class="w-10 h-6 bg-primary rounded-full relative cursor-pointer">
+<div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-all translate-x-4"></div>
+</div>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">سنقوم بإرسال إشعار لك قبل 15 دقيقة من الموعد المحدد للعادة.</p>
+</div>
+<div class="pt-6 flex gap-4">
+<button class="flex-1 px-6 py-3 border border-outline-variant text-on-surface font-bold rounded-lg hover:bg-surface-container transition-colors" onclick="toggleDrawer()" type="button">تجاهل</button>
+<button class="flex-1 px-6 py-3 bg-primary text-white font-bold rounded-lg shadow-sm hover:shadow-lg transition-all" type="submit">بدء العادة</button>
+</div>
+</form>
+</div>
+<script>
+    function toggleDrawer() {
+        const drawer = document.getElementById('habit-drawer');
+        const overlay = document.getElementById('drawer-overlay');
+        drawer.classList.toggle('open');
+        overlay.classList.toggle('open');
+        document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : '';
+    }
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById('main-sidebar');
+        const topNav = document.getElementById('top-nav');
+        const mainContent = document.getElementById('main-content');
+        const footer = document.getElementById('main-footer');
+        const icon = document.getElementById('collapse-icon');
+        
+        sidebar.classList.toggle('sidebar-collapsed');
+        sidebar.classList.toggle('w-sidebar-expanded');
+        sidebar.classList.toggle('w-[80px]');
+        
+        if (sidebar.classList.contains('sidebar-collapsed')) {
+            topNav.style.right = '80px';
+            mainContent.style.marginRight = '80px';
+            footer.style.marginRight = '80px';
+            icon.textContent = 'menu';
+        } else {
+            topNav.style.right = '256px';
+            mainContent.style.marginRight = '256px';
+            footer.style.marginRight = '256px';
+            icon.textContent = 'menu_open';
+        }
+    }
+</script>
+</body></html>

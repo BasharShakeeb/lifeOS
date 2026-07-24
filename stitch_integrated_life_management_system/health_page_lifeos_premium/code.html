@@ -1,0 +1,415 @@
+<!DOCTYPE html><html dir="rtl" lang="ar"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>LifeOS - الصحة</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"surface-container-highest": "#d3e4fe", "primary-container": "#10b981", "inverse-surface": "#213145", "secondary-fixed": "#b0f0d6", "surface-variant": "#d3e4fe", "surface-container": "#e5eeff", "surface-tint": "#006c49", "tertiary-container": "#99a69e", "on-primary-fixed": "#002113", "on-error-container": "#93000a", outline: "#6c7a71", "on-tertiary-fixed": "#131e19", "on-secondary-container": "#306d58", "on-primary": "#ffffff", "outline-variant": "#bbcabf", error: "#ba1a1a", "error-container": "#ffdad6", "on-tertiary-fixed-variant": "#3e4943", "tertiary-fixed-dim": "#bdcac1", surface: "#f8f9ff", "tertiary-fixed": "#d9e6dd", "on-surface-variant": "#3c4a42", background: "#f8f9ff", "on-primary-fixed-variant": "#005236", "surface-dim": "#cbdbf5", "surface-bright": "#f8f9ff", "primary-fixed-dim": "#4edea3", "on-tertiary": "#ffffff", "on-error": "#ffffff", "inverse-primary": "#4edea3", "secondary-fixed-dim": "#95d3ba", secondary: "#2b6954", "surface-container-high": "#dce9ff", "on-secondary-fixed": "#002117", "on-secondary": "#ffffff", "on-tertiary-container": "#303c36", primary: "#006c49", "primary-fixed": "#6ffbbe", "on-background": "#0b1c30", "on-secondary-fixed-variant": "#0b513d", tertiary: "#55615a", "surface-container-low": "#eff4ff", "on-primary-container": "#00422b", "inverse-on-surface": "#eaf1ff", "surface-container-lowest": "#ffffff", "secondary-container": "#adedd3", "on-surface": "#0b1c30"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {"sidebar-collapsed": "80px", "sidebar-expanded": "256px", "stack-sm": "8px", "stack-md": "16px", gutter: "24px", "margin-page": "32px"}, fontFamily: {"headline-lg": ["Hanken Grotesk"], "body-lg": ["Hanken Grotesk"], "title-md": ["Hanken Grotesk"], "label-md": ["Hanken Grotesk"], headline: ["Hanken Grotesk"], display: ["Hanken Grotesk"], body: ["Hanken Grotesk"], label: ["Hanken Grotesk"]}, fontSize: {}}}};</script>
+<style>
+        body {
+            background-color: #f8f9ff;
+            font-family: 'Hanken Grotesk', sans-serif;
+            transition: padding-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-transition {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .nav-text-transition {
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-active-indicator {
+            position: absolute;
+            right: 0;
+            width: 4px;
+            height: 24px;
+            background-color: #006c49;
+            border-radius: 0 4px 4px 0;
+        }
+        .chart-bar {
+            transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .sidebar-collapsed aside { width: 80px; }
+        .sidebar-collapsed main, .sidebar-collapsed header, .sidebar-collapsed footer { margin-right: 80px; }
+        .sidebar-collapsed .nav-text { opacity: 0; pointer-events: none; width: 0; overflow: hidden; }
+        .sidebar-collapsed .logo-text { opacity: 0; display: none; }
+        .sidebar-collapsed .nav-item { justify-content: center; padding-left: 0; padding-right: 0; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased">
+<!-- SideNavBar (Fixed Right) -->
+<aside class="bg-surface-container-lowest border-l border-outline-variant h-screen w-64 fixed right-0 top-0 z-50 shadow-sm flex flex-col py-6 sidebar-transition overflow-hidden" id="SideNavBar">
+<div class="px-6 mb-10 flex items-center gap-3 overflow-hidden">
+<div class="flex-shrink-0 w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">activity_zone</span>
+</div>
+<div class="logo-text nav-text-transition">
+<h1 class="text-xl font-bold text-primary">LifeOS</h1>
+<p class="text-[10px] uppercase tracking-wider text-on-surface-variant opacity-60">Productivity</p>
+</div>
+</div>
+<nav class="flex-1 px-3 space-y-2">
+<a class="nav-item flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all rounded-xl relative group" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="nav-text font-medium whitespace-nowrap">لوحة القيادة</span>
+</a>
+<a class="nav-item flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all rounded-xl relative group" href="#">
+<span class="material-symbols-outlined">task_alt</span>
+<span class="nav-text font-medium whitespace-nowrap">المهام</span>
+</a>
+<a class="nav-item flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all rounded-xl relative group" href="#">
+<span class="material-symbols-outlined">hub</span>
+<span class="nav-text font-medium whitespace-nowrap">المحاور</span>
+</a>
+<a class="nav-item flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all rounded-xl relative group" href="#">
+<span class="material-symbols-outlined">account_tree</span>
+<span class="nav-text font-medium whitespace-nowrap">المشاريع</span>
+</a>
+<a class="nav-item flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all rounded-xl relative group" href="#">
+<span class="material-symbols-outlined">repeat</span>
+<span class="nav-text font-medium whitespace-nowrap">العادات</span>
+</a>
+<a class="nav-item flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary transition-all rounded-xl relative group" href="#">
+<div class="sidebar-active-indicator"></div>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">monitor_heart</span>
+<span class="nav-text font-bold whitespace-nowrap">الصحة</span>
+</a>
+<a class="nav-item flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all rounded-xl relative group" href="#">
+<span class="material-symbols-outlined">emoji_events</span>
+<span class="nav-text font-medium whitespace-nowrap">الأهداف</span>
+</a>
+</nav>
+<div class="px-3 mt-auto">
+<button class="w-full flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container rounded-xl transition-all" onclick="toggleSidebar()">
+<span class="material-symbols-outlined" id="sidebar-toggle-icon">side_navigation_clash</span>
+<span class="nav-text font-medium whitespace-nowrap">تصغير</span>
+</button>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 right-64 h-16 z-40 bg-white/80 backdrop-blur-lg flex justify-between items-center px-8 border-b border-outline-variant sidebar-transition" id="Header">
+<div class="flex items-center gap-4 flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pr-10 pl-4 py-2 bg-surface-container-low border-none rounded-full text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all" placeholder="البحث في التقارير الطبية..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors relative">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+</button>
+<div class="h-6 w-[1px] bg-outline-variant mx-2"></div>
+<div class="flex items-center gap-3">
+<div class="text-left hidden md:block">
+<p class="text-sm font-bold leading-none">أحمد الراجحي</p>
+<p class="text-[10px] text-on-surface-variant">عضو متميز</p>
+</div>
+<img alt="Profile" class="w-9 h-9 rounded-full object-cover ring-2 ring-primary/10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFvc1nPw9Bv74wywsQwv_BHqnwbbo5HK1LIccJb3QLD4n9N_pYjVnrncpk1PsNROp0jOZV_AfyZP61rtKMwpAWlzFJ5HSKgDDrsHeSvxFrK-5rI_hCnJauNNOygfdarvYcKZUAqRg8El1labfPLseg_xplx5HCa5mmeYSKGdcOTHvvmYzBnVQypFBfeHoxvLdTMPDNxchW_qju0GD0kq1xbUv-maxuleP9xFQXsw9I-H5f4JQagqsr">
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="mr-64 mt-16 p-8 max-w-[1440px] mx-auto min-h-screen sidebar-transition">
+<!-- Page Header -->
+<div class="flex justify-between items-start mb-8">
+<div>
+<h2 class="text-3xl font-bold text-on-surface tracking-tight">لوحة الصحة الشخصية</h2>
+<p class="text-on-surface-variant mt-1">تتبع مؤشراتك الحيوية وأهدافك البدنية اليومية</p>
+</div>
+<button class="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-bold hover:shadow-lg hover:shadow-primary/20 transition-all active:scale-95" onclick="toggleDrawer(true)">
+<span class="material-symbols-outlined">add</span>
+<span>إضافة سجل جديد</span>
+</button>
+</div>
+<!-- Stats Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<!-- Stat 1: Overall Health -->
+<div class="bg-white p-6 rounded-2xl border border-outline-variant hover:border-primary/50 transition-all group">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<div class="text-primary flex items-center text-xs font-bold bg-primary/10 px-2 py-1 rounded-lg">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                    8%+
+                </div>
+</div>
+<p class="text-on-surface-variant text-sm font-medium">معدل الصحة العام</p>
+<div class="flex items-baseline gap-2 mt-1">
+<h3 class="text-3xl font-bold">78</h3>
+<span class="text-on-surface-variant text-sm font-medium">/ 100</span>
+</div>
+<div class="w-full h-12 flex items-end gap-1 mt-4">
+<div class="chart-bar flex-1 bg-primary/20 rounded-t-sm h-1/2"></div>
+<div class="chart-bar flex-1 bg-primary/20 rounded-t-sm h-3/4"></div>
+<div class="chart-bar flex-1 bg-primary/20 rounded-t-sm h-2/3"></div>
+<div class="chart-bar flex-1 bg-primary/20 rounded-t-sm h-5/6"></div>
+<div class="chart-bar flex-1 bg-primary rounded-t-sm h-full"></div>
+</div>
+</div>
+<!-- Stat 2: Steps -->
+<div class="bg-white p-6 rounded-2xl border border-outline-variant hover:border-primary/50 transition-all">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-blue-500/10 text-blue-600 rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">directions_run</span>
+</div>
+<span class="text-[10px] font-bold text-on-surface-variant bg-surface-container px-2 py-1 rounded-lg">يومي</span>
+</div>
+<p class="text-on-surface-variant text-sm font-medium">نشاط الخطوات</p>
+<div class="flex items-baseline gap-2 mt-1">
+<h3 class="text-3xl font-bold">8,542</h3>
+<span class="text-on-surface-variant text-sm font-medium">خطوة</span>
+</div>
+<div class="mt-4 w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-blue-500 h-full w-[85%] rounded-full"></div>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-2 text-left">85% من الهدف اليومي</p>
+</div>
+<!-- Stat 3: Sleep -->
+<div class="bg-white p-6 rounded-2xl border border-outline-variant hover:border-primary/50 transition-all">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-purple-500/10 text-purple-600 rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bedtime</span>
+</div>
+<div class="text-purple-600 flex items-center text-xs font-bold bg-purple-500/10 px-2 py-1 rounded-lg">
+                    جيد
+                </div>
+</div>
+<p class="text-on-surface-variant text-sm font-medium">متوسط النوم</p>
+<div class="flex items-baseline gap-2 mt-1">
+<h3 class="text-3xl font-bold">7.2</h3>
+<span class="text-on-surface-variant text-sm font-medium">ساعات</span>
+</div>
+<div class="w-full h-12 flex items-end gap-1 mt-4">
+<div class="chart-bar flex-1 bg-purple-500/20 rounded-t-sm h-5/6"></div>
+<div class="chart-bar flex-1 bg-purple-500/20 rounded-t-sm h-3/4"></div>
+<div class="chart-bar flex-1 bg-purple-500/20 rounded-t-sm h-full"></div>
+<div class="chart-bar flex-1 bg-purple-500/20 rounded-t-sm h-2/3"></div>
+<div class="chart-bar flex-1 bg-purple-500 rounded-t-sm h-4/5"></div>
+</div>
+</div>
+<!-- Stat 4: Calories -->
+<div class="bg-white p-6 rounded-2xl border border-outline-variant hover:border-primary/50 transition-all">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-orange-500/10 text-orange-600 rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+<div class="text-orange-600 flex items-center text-xs font-bold bg-orange-500/10 px-2 py-1 rounded-lg">
+                    مرتفع
+                </div>
+</div>
+<p class="text-on-surface-variant text-sm font-medium">السعرات المكتسبة</p>
+<div class="flex items-baseline gap-2 mt-1">
+<h3 class="text-3xl font-bold">1,845</h3>
+<span class="text-on-surface-variant text-sm font-medium">سعرة</span>
+</div>
+<div class="mt-4 w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-orange-500 h-full w-[65%] rounded-full"></div>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-2 text-left">متبقي 655 سعرة للهدف</p>
+</div>
+</div>
+<!-- Table Section -->
+<section class="bg-white rounded-2xl border border-outline-variant shadow-sm overflow-hidden">
+<div class="p-6 border-b border-outline-variant flex flex-wrap gap-4 justify-between items-center">
+<div class="flex items-center gap-3">
+<h3 class="text-xl font-bold">السجلات الصحية الأخيرة</h3>
+<span class="bg-surface-container px-2 py-0.5 rounded-md text-xs font-bold text-on-surface-variant">24 سجل</span>
+</div>
+<div class="flex gap-3">
+<div class="relative">
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline text-sm">filter_list</span>
+<select class="appearance-none pr-9 pl-4 py-2 bg-surface border border-outline-variant rounded-xl text-sm outline-none focus:border-primary cursor-pointer">
+<option>جميع الأنواع</option>
+<option>الوزن</option>
+<option>النشاط</option>
+</select>
+</div>
+<button class="p-2 border border-outline-variant rounded-xl hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">download</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-right border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant text-xs font-bold uppercase tracking-wider">
+<th class="px-6 py-4 text-right">النوع</th>
+<th class="px-6 py-4 text-right">القيمة</th>
+<th class="px-6 py-4 text-right">التاريخ والوقت</th>
+<th class="px-6 py-4 text-right">الحالة</th>
+<th class="px-6 py-4 text-right">ملاحظات</th>
+<th class="px-6 py-4 w-16"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-primary/5 transition-colors group cursor-pointer">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined">scale</span>
+</div>
+<span class="font-bold text-sm">الوزن</span>
+</div>
+</td>
+<td class="px-6 py-4 font-bold text-sm">72.5 كجم</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">20 مايو 2025 | 08:30 ص</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-black">طبيعي</span>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant italic">وزن صباحي قبل الإفطار</td>
+<td class="px-6 py-4">
+<button class="p-2 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white rounded-lg">
+<span class="material-symbols-outlined text-outline">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors group cursor-pointer">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined">steps</span>
+</div>
+<span class="font-bold text-sm">الخطوات</span>
+</div>
+</td>
+<td class="px-6 py-4 font-bold text-sm">8,542 خطوة</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">20 مايو 2025 | 10:00 م</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-[10px] font-black">جيد</span>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant italic">نشاط المشي المسائي</td>
+<td class="px-6 py-4">
+<button class="p-2 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white rounded-lg">
+<span class="material-symbols-outlined text-outline">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-6 bg-surface-container-low flex justify-between items-center">
+<p class="text-xs text-on-surface-variant font-medium">عرض 1 - 10 من أصل 24 سجل</p>
+<div class="flex gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white font-bold text-sm">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-white transition-colors text-sm">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Side Drawer (Slide from Left) -->
+<div class="fixed inset-0 bg-inverse-surface/40 z-[60] backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300" id="DrawerOverlay" onclick="toggleDrawer(false)"></div>
+<div class="fixed top-0 left-0 bottom-0 w-full max-w-md bg-white z-[70] shadow-2xl -translate-x-full transition-transform duration-400 ease-in-out flex flex-col" id="HealthDrawer">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center bg-surface-container-lowest">
+<h3 class="text-xl font-bold">إضافة سجل صحي جديد</h3>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors" onclick="toggleDrawer(false)">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto p-6 space-y-6">
+<div class="space-y-2">
+<label class="text-sm font-bold text-on-surface-variant block">نوع السجل</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-container-low border border-outline-variant rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary/20">
+<option>الوزن (كجم)</option>
+<option>الخطوات (خطوة)</option>
+<option>السعرات (سعرة)</option>
+<option>ساعات النوم</option>
+</select>
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="text-sm font-bold text-on-surface-variant block">القيمة</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary/20" placeholder="مثال: 72.5" type="text">
+</div>
+<div class="space-y-2">
+<label class="text-sm font-bold text-on-surface-variant block">الوحدة</label>
+<input class="w-full bg-surface-container-low/50 border border-outline-variant rounded-xl px-4 py-3 outline-none opacity-60" readonly="" type="text" value="كجم">
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-bold text-on-surface-variant block">التاريخ والوقت</label>
+<div class="flex gap-2">
+<input class="flex-1 bg-surface-container-low border border-outline-variant rounded-xl px-4 py-3 outline-none" type="date">
+<input class="flex-1 bg-surface-container-low border border-outline-variant rounded-xl px-4 py-3 outline-none" type="time">
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-bold text-on-surface-variant block">ملاحظات إضافية</label>
+<textarea class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary/20 min-h-[100px]" placeholder="أضف تفاصيل أخرى هنا..."></textarea>
+</div>
+<div class="border-2 border-dashed border-outline-variant rounded-2xl p-8 text-center hover:bg-surface-container-low transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-4xl text-outline group-hover:text-primary transition-colors">add_photo_alternate</span>
+<p class="text-sm font-bold mt-2">إرفاق صورة أو تقرير</p>
+<p class="text-xs text-on-surface-variant mt-1">PNG, JPG بحد أقصى 10 ميجابايت</p>
+</div>
+</div>
+<div class="p-6 border-t border-outline-variant flex gap-3 bg-surface-container-lowest">
+<button class="flex-1 py-4 font-bold text-on-surface-variant hover:bg-surface-container rounded-xl transition-all" onclick="toggleDrawer(false)">إلغاء</button>
+<button class="flex-1 py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:brightness-110 active:scale-95 transition-all">حفظ السجل</button>
+</div>
+</div>
+<footer class="mr-64 py-6 px-8 border-t border-outline-variant bg-white sidebar-transition text-on-surface-variant text-xs flex justify-between items-center" id="Footer">
+<p>© 2024 LifeOS Productivity Suite. جميع الحقوق محفوظة.</p>
+<div class="flex gap-4">
+<a class="hover:text-primary transition-colors" href="#">سياسة الخصوصية</a>
+<a class="hover:text-primary transition-colors" href="#">الشروط والأحكام</a>
+<a class="hover:text-primary transition-colors" href="#">مركز المساعدة</a>
+</div>
+</footer>
+<script>
+    function toggleSidebar() {
+        const body = document.body;
+        const icon = document.getElementById('sidebar-toggle-icon');
+        const isCollapsed = body.classList.toggle('sidebar-collapsed');
+        
+        icon.innerText = isCollapsed ? 'side_navigation_clasp' : 'side_navigation_clash';
+        
+        // Update text labels based on state
+        const toggleText = document.querySelector('#SideNavBar button span:last-child');
+        if(toggleText) toggleText.innerText = isCollapsed ? '' : 'تصغير';
+    }
+
+    function toggleDrawer(open) {
+        const drawer = document.getElementById('HealthDrawer');
+        const overlay = document.getElementById('DrawerOverlay');
+        
+        if (open) {
+            drawer.classList.remove('-translate-x-full');
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+            document.body.style.overflow = 'hidden';
+        } else {
+            drawer.classList.add('-translate-x-full');
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+            document.body.style.overflow = '';
+        }
+    }
+
+    // Chart animation trigger on load
+    window.addEventListener('DOMContentLoaded', () => {
+        const bars = document.querySelectorAll('.chart-bar');
+        bars.forEach(bar => {
+            const finalHeight = bar.style.height;
+            bar.style.height = '0';
+            setTimeout(() => {
+                bar.style.height = finalHeight;
+            }, 100);
+        });
+    });
+</script>
+</body></html>
