@@ -1,9 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { HeroSection } from '@/components/ui/HeroSection';
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import {
   Check,
-  Play,
   CheckCircle2,
   Grid,
   GraduationCap,
@@ -57,7 +57,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-4">
             <Link
               href="/login"
-              className="px-6 py-2.5 rounded-button bg-primary text-on-primary font-bold text-sm hover:bg-primary/90 transition-all shadow-subtle active:scale-[0.98]"
+              className="px-6 py-2.5 rounded-button bg-primary text-on-primary font-bold text-sm hover:bg-primary/90 hover:shadow-[0_0_20px_rgba(0,108,73,0.3)] hover:scale-[1.03] transition-all shadow-subtle active:scale-[0.98]"
             >
               تسجيل الدخول
             </Link>
@@ -66,84 +66,21 @@ export default function LandingPage() {
       </header>
 
       {/* 2. Hero Section */}
-      <section className="relative pt-12 pb-20 px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Right Column: Copywriting & CTA */}
-          <div className="space-y-6 text-right">
-            {/* Top Green Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-xs font-semibold text-primary">
-              <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              <span>منصة متكاملة لإدارة حياتك</span>
-            </div>
-
-            {/* Main Headline */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-on-surface leading-[1.25] tracking-tight font-display">
-              نظّم حياتك، <br />
-              <span className="text-primary">حقّق أهدافك</span>
-            </h1>
-
-            {/* Subtitle */}
-            <p className="text-base md:text-lg text-on-surface-variant leading-relaxed max-w-xl">
-              المنصة الشاملة الوحيدة التي تساعدك على إدارة مهامك، ومشاريعك، وعاداتك ودراستك، وصحتك في مكان واحد بسيط وممتع.
-            </p>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-wrap items-center gap-4 pt-2">
-              <Link
-                href="/dashboard"
-                className="px-8 py-3.5 rounded-button bg-primary text-on-primary font-bold text-base hover:bg-primary/90 transition-all shadow-level1 active:scale-[0.98]"
-              >
-                ابدأ الآن مجاناً
-              </Link>
-              <button
-                type="button"
-                className="px-6 py-3.5 rounded-button border border-outline-variant bg-surface-container-lowest text-on-surface font-semibold text-sm hover:bg-surface-container-low transition-colors flex items-center gap-2"
-              >
-                <div className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                  <Play className="w-3 h-3 fill-current" />
-                </div>
-                <span>شاهد كيف يعمل</span>
-              </button>
-            </div>
-
-            {/* Value Proposition */}
-            <div className="pt-6 flex items-center gap-3 border-t border-outline-variant/40">
-              <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                <CheckCircle2 className="w-5 h-5" />
-              </div>
-              <p className="text-sm text-on-surface-variant font-medium">
-                كل أدواتك لإدارة الحياة في مكان واحد منظّم
-              </p>
-            </div>
-          </div>
-
-          {/* Left Column: Hero Illustration */}
-          <div className="relative flex items-center justify-center w-full">
-            <Image
-              src="/images/hero/hero-illustration.png"
-              alt="LifeOS - منصة إدارة الحياة الشخصية"
-              width={600}
-              height={500}
-              className="w-full h-auto max-w-full object-contain"
-              priority
-            />
-          </div>
-        </div>
-      </section>
+      <HeroSection />
 
       {/* 3. Features Section ("مميزات متكاملة لحياة أفضل") */}
       <section id="features" className="py-20 px-6 max-w-7xl mx-auto border-t border-outline-variant/30">
-        <div className="text-center space-y-2 mb-16">
+        <ScrollReveal className="text-center space-y-2 mb-16">
           <span className="text-xs font-bold text-primary tracking-wider uppercase">كل ما تحتاجه في مكان واحد</span>
           <h2 className="text-3xl md:text-4xl font-bold text-on-surface font-display">
             مميزات متكاملة لحياة أفضل
           </h2>
-        </div>
+        </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <ScrollReveal stagger={0.1} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Card 1: إدارة المهام */}
-          <div className="p-8 rounded-2xl bg-surface-container-lowest border border-outline-variant/50 shadow-level1 space-y-4 hover:border-primary/40 transition-all">
-            <div className="w-12 h-12 rounded-xl bg-surface-container-low text-primary flex items-center justify-center border border-primary/20">
+          <div className="p-8 rounded-2xl bg-surface-container-lowest border border-outline-variant/50 shadow-level1 space-y-4 hover:border-primary hover:-translate-y-2 hover:shadow-level2 transition-all duration-300 group">
+            <div className="w-12 h-12 rounded-xl bg-surface-container-low text-primary flex items-center justify-center border border-primary/20 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
               <CheckCircle2 className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-bold text-on-surface">إدارة المهام</h3>
@@ -153,8 +90,8 @@ export default function LandingPage() {
           </div>
 
           {/* Card 2: المحاور [Hubs] */}
-          <div className="p-8 rounded-2xl bg-surface-container-lowest border border-outline-variant/50 shadow-level1 space-y-4 hover:border-primary/40 transition-all">
-            <div className="w-12 h-12 rounded-xl bg-surface-container-low text-primary flex items-center justify-center border border-primary/20">
+          <div className="p-8 rounded-2xl bg-surface-container-lowest border border-outline-variant/50 shadow-level1 space-y-4 hover:border-primary hover:-translate-y-2 hover:shadow-level2 transition-all duration-300 group">
+            <div className="w-12 h-12 rounded-xl bg-surface-container-low text-primary flex items-center justify-center border border-primary/20 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
               <Grid className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-bold text-on-surface">المحاور [Hubs]</h3>
@@ -164,8 +101,8 @@ export default function LandingPage() {
           </div>
 
           {/* Card 3: الدراسة والواجبات */}
-          <div className="p-8 rounded-2xl bg-surface-container-lowest border border-outline-variant/50 shadow-level1 space-y-4 hover:border-primary/40 transition-all">
-            <div className="w-12 h-12 rounded-xl bg-surface-container-low text-primary flex items-center justify-center border border-primary/20">
+          <div className="p-8 rounded-2xl bg-surface-container-lowest border border-outline-variant/50 shadow-level1 space-y-4 hover:border-primary hover:-translate-y-2 hover:shadow-level2 transition-all duration-300 group">
+            <div className="w-12 h-12 rounded-xl bg-surface-container-low text-primary flex items-center justify-center border border-primary/20 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
               <GraduationCap className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-bold text-on-surface">الدراسة والواجبات</h3>
@@ -175,8 +112,8 @@ export default function LandingPage() {
           </div>
 
           {/* Card 4: الصحة والياقة */}
-          <div className="p-8 rounded-2xl bg-surface-container-lowest border border-outline-variant/50 shadow-level1 space-y-4 hover:border-primary/40 transition-all">
-            <div className="w-12 h-12 rounded-xl bg-surface-container-low text-primary flex items-center justify-center border border-primary/20">
+          <div className="p-8 rounded-2xl bg-surface-container-lowest border border-outline-variant/50 shadow-level1 space-y-4 hover:border-primary hover:-translate-y-2 hover:shadow-level2 transition-all duration-300 group">
+            <div className="w-12 h-12 rounded-xl bg-surface-container-low text-primary flex items-center justify-center border border-primary/20 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
               <Heart className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-bold text-on-surface">الصحة واللياقة</h3>
@@ -186,8 +123,8 @@ export default function LandingPage() {
           </div>
 
           {/* Card 5: إحصائيات وتقارير */}
-          <div className="p-8 rounded-2xl bg-surface-container-lowest border border-outline-variant/50 shadow-level1 space-y-4 hover:border-primary/40 transition-all">
-            <div className="w-12 h-12 rounded-xl bg-surface-container-low text-primary flex items-center justify-center border border-primary/20">
+          <div className="p-8 rounded-2xl bg-surface-container-lowest border border-outline-variant/50 shadow-level1 space-y-4 hover:border-primary hover:-translate-y-2 hover:shadow-level2 transition-all duration-300 group">
+            <div className="w-12 h-12 rounded-xl bg-surface-container-low text-primary flex items-center justify-center border border-primary/20 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
               <BarChart3 className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-bold text-on-surface">إحصائيات وتقارير</h3>
@@ -197,8 +134,8 @@ export default function LandingPage() {
           </div>
 
           {/* Card 6: أمن وموثوق */}
-          <div className="p-8 rounded-2xl bg-surface-container-lowest border border-outline-variant/50 shadow-level1 space-y-4 hover:border-primary/40 transition-all">
-            <div className="w-12 h-12 rounded-xl bg-surface-container-low text-primary flex items-center justify-center border border-primary/20">
+          <div className="p-8 rounded-2xl bg-surface-container-lowest border border-outline-variant/50 shadow-level1 space-y-4 hover:border-primary hover:-translate-y-2 hover:shadow-level2 transition-all duration-300 group">
+            <div className="w-12 h-12 rounded-xl bg-surface-container-low text-primary flex items-center justify-center border border-primary/20 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
               <Shield className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-bold text-on-surface">أمن وموثوق</h3>
@@ -206,22 +143,22 @@ export default function LandingPage() {
               بياناتك محمية بأعلى معايير التشفير والخصوصية لضمان راحة بالك التامة وحماية خصوصيتك.
             </p>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* 4. "كيف يعمل LifeOS؟" Section */}
       <section id="how-it-works" className="py-20 px-6 max-w-7xl mx-auto border-t border-outline-variant/30">
-        <div className="text-center space-y-2 mb-16">
+        <ScrollReveal className="text-center space-y-2 mb-16">
           <span className="text-xs font-bold text-primary tracking-wider uppercase">بسيطة وفعالة</span>
           <h2 className="text-3xl md:text-4xl font-bold text-on-surface font-display">
             كيف يعمل LifeOS؟
           </h2>
-        </div>
+        </ScrollReveal>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <ScrollReveal stagger={0.12} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Step 1 */}
-          <div className="p-6 rounded-2xl bg-surface-container-lowest border border-outline-variant/40 shadow-subtle text-center space-y-3">
-            <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mx-auto">
+          <div className="p-6 rounded-2xl bg-surface-container-lowest border border-outline-variant/40 shadow-subtle text-center space-y-3 hover:border-primary hover:-translate-y-2 hover:shadow-level2 transition-all duration-300 group">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mx-auto transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
               <UserCheck className="w-6 h-6" />
             </div>
             <h4 className="font-bold text-base text-on-surface">1. سجل حسابك</h4>
@@ -231,8 +168,8 @@ export default function LandingPage() {
           </div>
 
           {/* Step 2 */}
-          <div className="p-6 rounded-2xl bg-surface-container-lowest border border-outline-variant/40 shadow-subtle text-center space-y-3">
-            <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mx-auto">
+          <div className="p-6 rounded-2xl bg-surface-container-lowest border border-outline-variant/40 shadow-subtle text-center space-y-3 hover:border-primary hover:-translate-y-2 hover:shadow-level2 transition-all duration-300 group">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mx-auto transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
               <Calendar className="w-6 h-6" />
             </div>
             <h4 className="font-bold text-base text-on-surface">2. نظم يومك</h4>
@@ -242,8 +179,8 @@ export default function LandingPage() {
           </div>
 
           {/* Step 3 */}
-          <div className="p-6 rounded-2xl bg-surface-container-lowest border border-outline-variant/40 shadow-subtle text-center space-y-3">
-            <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mx-auto">
+          <div className="p-6 rounded-2xl bg-surface-container-lowest border border-outline-variant/40 shadow-subtle text-center space-y-3 hover:border-primary hover:-translate-y-2 hover:shadow-level2 transition-all duration-300 group">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mx-auto transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
               <TrendingUp className="w-6 h-6" />
             </div>
             <h4 className="font-bold text-base text-on-surface">3. تابع تقدمك</h4>
@@ -253,8 +190,8 @@ export default function LandingPage() {
           </div>
 
           {/* Step 4 */}
-          <div className="p-6 rounded-2xl bg-surface-container-lowest border border-outline-variant/40 shadow-subtle text-center space-y-3">
-            <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mx-auto">
+          <div className="p-6 rounded-2xl bg-surface-container-lowest border border-outline-variant/40 shadow-subtle text-center space-y-3 hover:border-primary hover:-translate-y-2 hover:shadow-level2 transition-all duration-300 group">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mx-auto transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
               <Lightbulb className="w-6 h-6" />
             </div>
             <h4 className="font-bold text-base text-on-surface">4. حقق أهدافك</h4>
@@ -262,11 +199,12 @@ export default function LandingPage() {
               استمر في التطور بثقة لتصل إلى النسخة الأفضل من حياتك المنظمة.
             </p>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* 5. Bottom Call-To-Action Banner */}
       <section className="py-12 px-6 max-w-7xl mx-auto w-full">
+        <ScrollReveal>
         <div className="bg-primary text-on-primary rounded-3xl p-8 md:p-12 shadow-level2 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           {/* Right Column (RTL text) */}
           <div className="space-y-6 text-right">
@@ -279,7 +217,7 @@ export default function LandingPage() {
             <div>
               <Link
                 href="/dashboard"
-                className="inline-flex items-center gap-3 px-8 py-3.5 rounded-button bg-surface-container-lowest text-primary font-bold text-base hover:bg-surface-container-low transition-all shadow-subtle"
+                className="inline-flex items-center gap-3 px-8 py-3.5 rounded-button bg-surface-container-lowest text-primary font-bold text-base hover:bg-surface-container-low hover:shadow-[0_0_20px_rgba(0,108,73,0.2)] hover:scale-[1.03] transition-all shadow-subtle"
               >
                 <span>ابدأ الآن مجاناً</span>
                 <ArrowRight className="w-5 h-5" />
@@ -296,9 +234,11 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
+        </ScrollReveal>
       </section>
 
       {/* 6. Footer */}
+      <ScrollReveal>
       <footer className="mt-auto border-t border-outline-variant/40 bg-surface-container-lowest pt-16 pb-8 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-outline-variant/30">
           {/* Brand Col */}
@@ -364,6 +304,7 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
+      </ScrollReveal>
     </div>
   );
 }
