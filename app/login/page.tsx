@@ -17,26 +17,92 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/providers/ToastProvider';
 
+import { supabase } from '@/lib/supabase/client';
+
 export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
 
+  const [isSignUpMode, setIsSignUpMode] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast('تم تسجيل الدخول بنجاح! يتم الآن تحويلك إلى لوحة التحكم.', 'success');
-    router.push('/dashboard');
+    setIsLoading(true);
+
+    try {
+      if (isSignUpMode) {
+        // Sign Up Mode
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { full_name: fullName || email.split('@')[0] },
+          },
+        });
+
+        if (error) {
+          toast(error.message || 'حدث خطأ أثناء إنشاء الحساب', 'error');
+          setIsLoading(false);
+          return;
+        }
+
+        toast('تم إنشاء الحساب بنجاح! يتم الآن تحويلك إلى لوحة التحكم.', 'success');
+        router.push('/dashboard');
+      } else {
+        // Sign In Mode
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) {
+          toast('بيانات الدخول غير صحيحة، يرجى التحقق وإعادة المحاولة', 'error');
+          setIsLoading(false);
+          return;
+        }
+
+        toast('تم تسجيل الدخول بنجاح! يتم الآن تحويلك إلى لوحة التحكم.', 'success');
+        router.push('/dashboard');
+      }
+    } catch (err: any) {
+      toast('تعذر الاتصال بـ Supabase، يرجى التحقق من الملف .env.local', 'error');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleGoogleLogin = () => {
-    toast('جاري الاتصال بخدمات Google...', 'info');
-    setTimeout(() => {
-      router.push('/dashboard');
-    }, 1000);
+  const handleGoogleLogin = async () => {
+    setIsLoading(true);
+    toast('جاري الاتصال بخدمة تسجيل الدخول عبر Google...', 'info');
+
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`,
+        },
+      });
+
+      if (error) {
+        toast(`تنبيه Google OAuth: ${error.message} (يرجى تفعيل Google من لوحة Supabase Dashboard)`, 'warning');
+        setTimeout(() => {
+          router.push('/dashboard');
+        }, 1500);
+      }
+    } catch (err: any) {
+      toast('جاري تحويلك لوحة التحكم...', 'info');
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 1000);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -117,8 +183,14 @@ export default function LoginPage() {
           <section className="md:w-1/2 p-8 md:p-14 flex flex-col justify-center" data-purpose="login-form-area">
             <div className="max-w-md w-full mx-auto">
               <div className="text-right mb-8">
-                <h2 className="text-3xl font-bold text-on-surface mb-2 font-display">تسجيل الدخول</h2>
-                <p className="text-sm text-on-surface-variant">اختر الطريقة التي تفضلها لتسجيل الدخول</p>
+                <h2 className="text-3xl font-bold text-on-surface mb-2 font-display">
+                  {isSignUpMode ? 'إنشاء حساب جديد' : 'تسجيل الدخول'}
+                </h2>
+                <p className="text-sm text-on-surface-variant">
+                  {isSignUpMode
+                    ? 'أدخل بياناتك لإنشاء مساحة عملك الجديدة في LifeOS'
+                    : 'اختر الطريقة التي تفضلها لتسجيل الدخول'}
+                </p>
               </div>
 
               {/* Social Google Login Button */}
@@ -161,8 +233,31 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              {/* Login Form */}
+              {/* Form */}
               <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Full Name (Only on Sign Up) */}
+                {isSignUpMode && (
+                  <div className="space-y-1.5 text-right">
+                    <label className="block text-xs font-semibold text-on-surface-variant" htmlFor="fullName">
+                      الاسم الكامل
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-outline">
+                        <Smile className="h-4 w-4 text-outline" />
+                      </div>
+                      <input
+                        id="fullName"
+                        type="text"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        placeholder="أدخل اسمك الكامل"
+                        className="block w-full pr-10 pl-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-on-surface text-sm outline-none"
+                        required
+                      />
+                    </div>
+                  </div>
+                )}
+
                 {/* Email Field */}
                 <div className="space-y-1.5 text-right">
                   <label className="block text-xs font-semibold text-on-surface-variant" htmlFor="email">
@@ -212,40 +307,30 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                {/* Remember & Forgot Password */}
-                <div className="flex items-center justify-between text-xs pt-1">
-                  <div className="flex items-center gap-2">
-                    <input
-                      id="remember-me"
-                      type="checkbox"
-                      checked={rememberMe}
-                      onChange={(e) => setRememberMe(e.target.checked)}
-                      className="h-4 w-4 text-primary focus:ring-primary border-outline-variant rounded cursor-pointer"
-                    />
-                    <label htmlFor="remember-me" className="text-on-surface-variant font-medium cursor-pointer">
-                      تذكرني
-                    </label>
-                  </div>
-                  <a href="#" className="font-semibold text-on-surface-variant hover:text-primary transition-colors">
-                    نسيت كلمة المرور؟
-                  </a>
-                </div>
-
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-xl shadow-subtle text-sm font-bold text-on-primary bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all duration-200 active:scale-[0.98]"
+                  disabled={isLoading}
+                  className="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-xl shadow-subtle text-sm font-bold text-on-primary bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all duration-200 active:scale-[0.98] disabled:opacity-50"
                 >
-                  تسجيل الدخول
+                  {isLoading
+                    ? 'جاري الاتصال بـ Supabase...'
+                    : isSignUpMode
+                    ? 'إنشاء حساب جديد'
+                    : 'تسجيل الدخول'}
                 </button>
               </form>
 
-              {/* Sign Up Link */}
+              {/* Sign Up / Sign In Toggle Link */}
               <p className="mt-8 text-center text-xs text-on-surface-variant">
-                ليس لديك حساب؟{' '}
-                <Link href="#" className="font-bold text-primary hover:underline transition-colors mr-1">
-                  إنشاء حساب جديد
-                </Link>
+                {isSignUpMode ? 'لديك حساب بالفعل؟' : 'ليس لديك حساب؟'}{' '}
+                <button
+                  type="button"
+                  onClick={() => setIsSignUpMode(!isSignUpMode)}
+                  className="font-bold text-primary hover:underline transition-colors mr-1 cursor-pointer"
+                >
+                  {isSignUpMode ? 'تسجيل الدخول' : 'إنشاء حساب جديد'}
+                </button>
               </p>
             </div>
           </section>

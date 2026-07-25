@@ -77,6 +77,67 @@
   .text-metric {
     @apply text-3xl font-bold tracking-tight text-on-surface;
   }
+
+  /* Soft Aurora Glassmorphism Utilities */
+  .glass-aurora {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04), 0 0 20px 0 rgba(255, 255, 255, 0.5) inset;
+  }
+
+  .dark .glass-aurora {
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3), 0 0 20px 0 rgba(255, 255, 255, 0.05) inset;
+  }
+
+  .aurora-glow-blue {
+    background: radial-gradient(circle, rgba(96, 165, 250, 0.35) 0%, rgba(147, 197, 253, 0.15) 50%, rgba(255, 255, 255, 0) 75%);
+    filter: blur(24px);
+  }
+
+  .aurora-glow-purple {
+    background: radial-gradient(circle, rgba(192, 132, 252, 0.35) 0%, rgba(233, 213, 255, 0.15) 50%, rgba(255, 255, 255, 0) 75%);
+    filter: blur(24px);
+  }
+
+  .aurora-glow-green {
+    background: radial-gradient(circle, rgba(52, 211, 153, 0.35) 0%, rgba(167, 243, 208, 0.15) 50%, rgba(255, 255, 255, 0) 75%);
+    filter: blur(24px);
+  }
+
+  .aurora-glow-orange {
+    background: radial-gradient(circle, rgba(251, 146, 60, 0.35) 0%, rgba(254, 215, 170, 0.15) 50%, rgba(255, 255, 255, 0) 75%);
+    filter: blur(24px);
+  }
+
+  .aurora-mesh-bg {
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(147, 197, 253, 0.25) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(192, 132, 252, 0.25) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(52, 211, 153, 0.2) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(251, 146, 60, 0.2) 0px, transparent 50%);
+  }
+}
+
+/* Keyframe Aurora Floating Effect */
+@keyframes floatAurora {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(12px, -15px) scale(1.08); }
+  66% { transform: translate(-10px, 10px) scale(0.95); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+.animate-aurora-float {
+  animation: floatAurora 10s ease-in-out infinite;
+}
+
+.animate-aurora-float-delayed {
+  animation: floatAurora 12s ease-in-out infinite 3s;
 }
 
 /* Custom Soft Scrollbar */
@@ -94,3 +155,4 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 108, 73, 0.4);
 }
+

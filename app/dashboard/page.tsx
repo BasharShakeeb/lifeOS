@@ -23,6 +23,7 @@ import {
   Activity,
 } from 'lucide-react';
 import { useAppStore } from '@/stores/useAppStore';
+import { AuroraStatCard } from '@/components/ui/AuroraStatCard';
 
 export default function DashboardPage() {
   const {
@@ -92,6 +93,13 @@ export default function DashboardPage() {
         </div>
 
         <div className="flex items-center gap-3">
+          <Link
+            href="/dashboard/aurora"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-button bg-purple-500/10 text-purple-700 dark:text-purple-300 font-bold text-xs hover:bg-purple-500/20 transition-all border border-purple-400/30"
+          >
+            <Sparkles className="w-4 h-4 text-purple-500" />
+            <span>معرض Aurora Mesh Cards</span>
+          </Link>
           <button
             onClick={() => openDrawer('task', 'create')}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-button bg-primary text-on-primary font-bold text-sm hover:bg-primary/90 shadow-subtle transition-all active:scale-[0.98]"
@@ -102,110 +110,51 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* 2. Top Stats KPI Cards (Connected Live to Store) */}
+      {/* 2. Top Stats KPI Cards with Soft Aurora Mesh & Glassmorphism Highlights */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Card 1: المهام اليومية */}
-        <Link
-          href="/dashboard/tasks"
-          className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/40 hover:shadow-level2 hover:border-primary-container/60 hover:-translate-y-1 transition-all duration-300 group cursor-pointer"
-        >
-          <div className="flex justify-between items-start mb-4">
-            <div>
-              <p className="text-on-surface-variant text-xs font-bold uppercase tracking-wider mb-1">
-                إجمالي المهام
-              </p>
-              <h3 className="text-3xl font-extrabold text-primary-container font-mono">
-                {completedTasks < 10 ? `0${completedTasks}` : completedTasks} / {totalTasks < 10 ? `0${totalTasks}` : totalTasks}
-              </h3>
-            </div>
-            <div className="p-3 bg-primary-container/10 text-primary-container rounded-xl group-hover:bg-primary-container group-hover:text-on-primary transition-all">
-              <CheckCircle2 className="w-6 h-6" />
-            </div>
-          </div>
-          <div className="w-full bg-surface-container rounded-full h-2 overflow-hidden">
-            <div
-              className="bg-primary-container h-full rounded-full transition-all duration-500"
-              style={{ width: `${taskCompletionRate}%` }}
-            />
-          </div>
-          <p className="text-[11px] text-on-surface-variant mt-3 font-semibold">
-            تم إنجاز {taskCompletionRate}% من جميع المهام
-          </p>
+        <Link href="/dashboard/tasks" className="block">
+          <AuroraStatCard
+            title="إجمالي المهام"
+            value={`${completedTasks} / ${totalTasks}`}
+            subtitle={`إنجاز ${taskCompletionRate}% من المهام`}
+            trend={{ value: `${taskCompletionRate}%`, isPositive: taskCompletionRate >= 50 }}
+            iconName="CheckCircle2"
+            theme="purple"
+            sparklineData={[20, 35, 45, 60, 75, 80, taskCompletionRate || 85]}
+          />
         </Link>
-
-        {/* Card 2: المشاريع النشطة */}
-        <Link
-          href="/dashboard/projects"
-          className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/40 hover:shadow-level2 hover:border-secondary/60 hover:-translate-y-1 transition-all duration-300 group cursor-pointer"
-        >
-          <div className="flex justify-between items-start mb-4">
-            <div>
-              <p className="text-on-surface-variant text-xs font-bold uppercase tracking-wider mb-1">
-                المشاريع النشطة
-              </p>
-              <h3 className="text-3xl font-extrabold text-on-surface font-mono">
-                {activeProjects < 10 ? `0${activeProjects}` : activeProjects}
-              </h3>
-            </div>
-            <div className="p-3 bg-surface-container text-on-surface-variant rounded-xl group-hover:bg-secondary group-hover:text-on-secondary transition-all">
-              <Rocket className="w-6 h-6" />
-            </div>
-          </div>
-          <div className="w-full bg-surface-container rounded-full h-2 overflow-hidden">
-            <div
-              className="bg-secondary h-full rounded-full transition-all duration-500"
-              style={{ width: `${avgProjectProgress}%` }}
-            />
-          </div>
-          <p className="text-[11px] text-on-surface-variant mt-3 font-semibold">
-            متوسط الإنجاز العام {avgProjectProgress}%
-          </p>
+        <Link href="/dashboard/projects" className="block">
+          <AuroraStatCard
+            title="المشاريع النشطة"
+            value={`${activeProjects} مشاريع`}
+            subtitle={`متوسط التقدم ${avgProjectProgress}%`}
+            trend={{ value: `${activeProjects} نشط`, isPositive: true }}
+            iconName="Rocket"
+            theme="blue"
+            sparklineData={[10, 15, 30, 40, 50, 65, avgProjectProgress || 70]}
+          />
         </Link>
-
-        {/* Card 3: الواجبات والتكليفات */}
-        <Link
-          href="/dashboard/assignments"
-          className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/40 hover:shadow-level2 hover:border-amber-500/60 hover:-translate-y-1 transition-all duration-300 group cursor-pointer"
-        >
-          <div className="flex justify-between items-start mb-4">
-            <div>
-              <p className="text-on-surface-variant text-xs font-bold uppercase tracking-wider mb-1">
-                التكليفات والواجبات
-              </p>
-              <h3 className="text-3xl font-extrabold text-on-surface font-mono">
-                {pendingAssignments < 10 ? `0${pendingAssignments}` : pendingAssignments}
-              </h3>
-            </div>
-            <div className="p-3 bg-surface-container text-on-surface-variant rounded-xl group-hover:bg-amber-600 group-hover:text-white transition-all">
-              <BookOpen className="w-6 h-6" />
-            </div>
-          </div>
-          <p className="text-[11px] text-on-surface-variant mt-3 font-semibold">
-            {totalAssignments} تكليفات مسجلة في النظام
-          </p>
+        <Link href="/dashboard/assignments" className="block">
+          <AuroraStatCard
+            title="الواجبات والمهام"
+            value={`${pendingAssignments} معلقة`}
+            subtitle={`إجمالي ${totalAssignments} واجب دراسي`}
+            trend={{ value: pendingAssignments === 0 ? "مكتمل 👍" : `${pendingAssignments} قيد الانتظار`, isPositive: pendingAssignments === 0 }}
+            iconName="BookOpen"
+            theme="orange"
+            sparklineData={[50, 40, 35, 30, 20, 15, pendingAssignments || 5]}
+          />
         </Link>
-
-        {/* Card 4: الأهداف ومعدل الإنتاجية */}
-        <Link
-          href="/dashboard/goals"
-          className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/40 hover:shadow-level2 hover:border-primary-container/60 hover:-translate-y-1 transition-all duration-300 group cursor-pointer"
-        >
-          <div className="flex justify-between items-start mb-4">
-            <div>
-              <p className="text-on-surface-variant text-xs font-bold uppercase tracking-wider mb-1">
-                معدل تقدم الأهداف
-              </p>
-              <h3 className="text-3xl font-extrabold text-primary-container font-mono">
-                {avgGoalProgress}%
-              </h3>
-            </div>
-            <div className="p-3 bg-primary-container/10 text-primary-container rounded-xl group-hover:bg-primary-container group-hover:text-on-primary transition-all">
-              <Target className="w-6 h-6" />
-            </div>
-          </div>
-          <p className="text-[11px] text-on-surface-variant mt-3 font-semibold">
-            {totalGoals} أهداف رئيسية جاري تحقيقها 🎉
-          </p>
+        <Link href="/dashboard/habits" className="block">
+          <AuroraStatCard
+            title="العادات اليومية"
+            value={`${completedHabitsToday} / ${totalHabits}`}
+            subtitle={`أطول تتابع: ${maxHabitStreak} يوم ⚡`}
+            trend={{ value: `سلسلة ${maxHabitStreak}d`, isPositive: true }}
+            iconName="Flame"
+            theme="green"
+            sparklineData={[1, 3, 5, 7, 10, 12, maxHabitStreak || 14]}
+          />
         </Link>
       </div>
 
@@ -238,35 +187,35 @@ export default function DashboardPage() {
                 </p>
               </div>
             ) : (
-            <div className="h-64 relative pt-4">
-              <div className="absolute inset-0 flex items-end justify-between px-2 text-[11px] text-outline font-bold opacity-70">
-                <span>12 ص</span>
-                <span>4 ص</span>
-                <span>8 ص</span>
-                <span>12 م</span>
-                <span>4 م</span>
-                <span>8 م</span>
+              <div className="h-64 relative pt-4">
+                <div className="absolute inset-0 flex items-end justify-between px-2 text-[11px] text-outline font-bold opacity-70">
+                  <span>12 ص</span>
+                  <span>4 ص</span>
+                  <span>8 ص</span>
+                  <span>12 م</span>
+                  <span>4 م</span>
+                  <span>8 م</span>
+                </div>
+                <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 40">
+                  <defs>
+                    <linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0%" stopColor="#10b981" stopOpacity="0.3" />
+                      <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M0,40 L0,35 Q10,32 20,30 T40,15 T60,10 T80,18 T100,8 L100,40 Z"
+                    fill="url(#chartGradient)"
+                  />
+                  <path
+                    d="M0,35 Q10,32 20,30 T40,15 T60,10 T80,18 T100,8"
+                    fill="none"
+                    stroke="#10b981"
+                    strokeWidth="1.5"
+                  />
+                  <circle cx="60" cy="10" fill="#10b981" r="2.5" />
+                </svg>
               </div>
-              <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 40">
-                <defs>
-                  <linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
-                    <stop offset="0%" stopColor="#10b981" stopOpacity="0.3" />
-                    <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
-                  </linearGradient>
-                </defs>
-                <path
-                  d="M0,40 L0,35 Q10,32 20,30 T40,15 T60,10 T80,18 T100,8 L100,40 Z"
-                  fill="url(#chartGradient)"
-                />
-                <path
-                  d="M0,35 Q10,32 20,30 T40,15 T60,10 T80,18 T100,8"
-                  fill="none"
-                  stroke="#10b981"
-                  strokeWidth="1.5"
-                />
-                <circle cx="60" cy="10" fill="#10b981" r="2.5" />
-              </svg>
-            </div>
             )}
           </section>
 
@@ -298,20 +247,18 @@ export default function DashboardPage() {
               {tasks.map((task) => (
                 <div
                   key={task.id}
-                  className={`flex items-center justify-between p-4 rounded-xl transition-all group border ${
-                    task.status === 'completed'
+                  className={`flex items-center justify-between p-4 rounded-xl transition-all group border ${task.status === 'completed'
                       ? 'bg-surface-container-low/40 border-transparent'
                       : 'bg-surface-container-lowest border-outline-variant/30 hover:border-primary-container/50 hover:bg-surface-container-low/50 shadow-subtle'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-4">
                     <button
                       onClick={() => toggleTaskCompletion(task.id)}
-                      className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
-                        task.status === 'completed'
+                      className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${task.status === 'completed'
                           ? 'bg-primary-container border-primary-container text-white'
                           : 'border-outline-variant hover:border-primary-container'
-                      }`}
+                        }`}
                       title={task.status === 'completed' ? 'تحديد كغير مكتمل' : 'تحديد كمكتمل'}
                     >
                       {task.status === 'completed' && <Check className="w-4 h-4 stroke-[3]" />}
@@ -319,9 +266,8 @@ export default function DashboardPage() {
                     <div>
                       <p
                         onClick={() => openModal('task', task)}
-                        className={`font-bold text-sm cursor-pointer hover:text-primary-container transition-colors ${
-                          task.status === 'completed' ? 'line-through text-outline' : 'text-on-surface'
-                        }`}
+                        className={`font-bold text-sm cursor-pointer hover:text-primary-container transition-colors ${task.status === 'completed' ? 'line-through text-outline' : 'text-on-surface'
+                          }`}
                       >
                         {task.title}
                       </p>

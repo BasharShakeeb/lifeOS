@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { Task, Hub, Project, Assignment, Habit, Goal, HealthRecord } from '@/types';
+import { supabaseRepository } from '@/repositories/supabaseRepository';
 
 interface AppState {
   // Sidebar Collapsed State
@@ -30,6 +31,9 @@ interface AppState {
   };
   openModal: (type: 'task' | 'hub' | 'project' | 'assignment' | 'habit' | 'goal' | 'health', data: any) => void;
   closeModal: () => void;
+
+  // Sync state with Supabase
+  fetchInitialData: (workspaceId?: string) => Promise<void>;
 
   // Datasets & CRUD operations
   tasks: Task[];
@@ -103,6 +107,24 @@ export const useAppStore = create<AppState>((set) => ({
   activeModal: { isOpen: false, type: null },
   openModal: (type, data) => set({ activeModal: { isOpen: true, type, data } }),
   closeModal: () => set((state) => ({ activeModal: { ...state.activeModal, isOpen: false } })),
+
+  fetchInitialData: async (workspaceId = 'default') => {
+    try {
+      const [fetchedTasks, fetchedProjects, fetchedHubs] = await Promise.all([
+        supabaseRepository.getTasks(workspaceId),
+        supabaseRepository.getProjects(workspaceId),
+        supabaseRepository.getHubs(workspaceId),
+      ]);
+
+      set({
+        tasks: fetchedTasks.length > 0 ? fetchedTasks : initialTasks,
+        projects: fetchedProjects.length > 0 ? fetchedProjects : initialProjects,
+        hubs: fetchedHubs.length > 0 ? fetchedHubs : initialHubs,
+      });
+    } catch (error) {
+      console.warn('Using local fallback state, Supabase connection error:', error);
+    }
+  },
 
   tasks: initialTasks,
   addTask: (task) =>
