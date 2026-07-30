@@ -4,7 +4,6 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  Check,
   LayoutDashboard,
   CheckCircle2,
   Grid,
@@ -18,6 +17,7 @@ import {
   PanelRightOpen,
 } from 'lucide-react';
 import { useAppStore } from '@/stores/useAppStore';
+import { Logo } from '@/components/ui/Logo';
 
 const navigationItems = [
   { label: 'الرئيسية', href: '/dashboard', icon: LayoutDashboard },
@@ -42,14 +42,11 @@ export const Sidebar: React.FC = () => {
     >
       {/* Brand Header */}
       <div className="flex items-center justify-between mb-8 px-2">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center shrink-0 shadow-sm text-on-primary">
-            <Check className="w-6 h-6 stroke-[3]" />
-          </div>
-          {!isSidebarCollapsed && (
-            <span className="font-display text-2xl font-extrabold text-on-surface tracking-tight">
-              LifeOS
-            </span>
+        <div className="flex items-center">
+          {isSidebarCollapsed ? (
+            <Logo variant="icon" size={40} />
+          ) : (
+            <Logo variant="full" size={130} />
           )}
         </div>
         <button

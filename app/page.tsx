@@ -2,8 +2,8 @@ import React from 'react';
 import Link from 'next/link';
 import { HeroSection } from '@/components/ui/HeroSection';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
+import { Logo } from '@/components/ui/Logo';
 import {
-  Check,
   CheckCircle2,
   Grid,
   GraduationCap,
@@ -16,6 +16,7 @@ import {
   Lightbulb,
   ArrowRight,
   Share2,
+  Check,
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -25,13 +26,8 @@ export default function LandingPage() {
       <header className="bg-surface-container-lowest border-b border-outline-variant/50 sticky top-0 z-50 shadow-subtle">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           {/* Logo Brand */}
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-primary">
-              <Check className="w-5 h-5 stroke-[3]" />
-            </div>
-            <span className="font-bold text-2xl text-on-surface tracking-tight font-display">
-              Life<span className="text-primary">OS</span>
-            </span>
+          <div className="flex items-center">
+            <Logo variant="full" size={120} className="h-10 w-auto" />
           </div>
 
           {/* Navigation Links */}

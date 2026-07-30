@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { User, Bell, Moon, LogOut, Save } from 'lucide-react';
 import { useToast } from '@/providers/ToastProvider';
 
+import { supabase } from '@/lib/supabase/client';
+
 export default function SettingsPage() {
   const router = useRouter();
   const { toast } = useToast();
@@ -19,9 +21,10 @@ export default function SettingsPage() {
     toast('تم حفظ الإعدادات بنجاح', 'success');
   };
 
-  const handleLogout = () => {
-    toast('تم تسجيل الخروج من الجلسة', 'info');
-    router.push('/login');
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    toast('تم تسجيل الخروج بنجاح', 'info');
+    router.push('/');
   };
 
   return (

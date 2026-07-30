@@ -16,6 +16,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { useToast } from '@/providers/ToastProvider';
+import { Logo } from '@/components/ui/Logo';
 
 import { supabase } from '@/lib/supabase/client';
 
@@ -85,7 +86,7 @@ export default function LoginPage() {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
 
@@ -110,13 +111,8 @@ export default function LoginPage() {
       {/* 1. Top Navigation */}
       <nav className="w-full py-6 px-6 md:px-12 flex justify-between items-center max-w-7xl mx-auto" data-purpose="top-navigation">
         {/* Logo Brand */}
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-on-primary shadow-sm">
-            <Check className="w-5 h-5 stroke-[3]" />
-          </div>
-          <span className="text-2xl font-bold text-on-surface tracking-tight font-display">
-            LifeOS
-          </span>
+        <div className="flex items-center">
+          <Logo variant="full" size={120} className="h-10 w-auto" />
         </div>
 
         {/* Back to Home Link */}
@@ -156,27 +152,17 @@ export default function LoginPage() {
 
             {/* App Preview Illustration */}
             <div className="relative z-10 my-8 flex justify-center items-center">
-              <div className="relative max-w-sm w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border border-outline-variant/30 bg-surface-container-lowest flex flex-col items-center justify-center gap-4">
-                <div className="w-20 h-20 rounded-3xl bg-primary/10 flex items-center justify-center text-primary">
-                  <Check className="w-10 h-10 stroke-[3]" />
-                </div>
-                <div className="text-center px-6">
-                  <p className="text-sm font-bold text-on-surface">نظّم حياتك في مكان واحد</p>
-                  <p className="text-xs text-on-surface-variant mt-1">مهام، مشاريع، عادات، وأهداف</p>
-                </div>
+              <div className="relative max-w-sm w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border border-outline-variant/30 bg-white flex flex-col items-center justify-center gap-4 p-6">
+                <img
+                  src="/images/logo/lifeos-logo.png"
+                  alt="LifeOS Logo"
+                  className="w-40 h-auto object-contain"
+                />
               </div>
             </div>
 
-            {/* Security Badge */}
-            <div className="relative z-10 flex items-center gap-3 bg-surface-container-lowest/90 backdrop-blur-sm p-4 rounded-2xl border border-outline-variant/20 self-start shadow-sm">
-              <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary flex-shrink-0">
-                <ShieldCheck className="w-6 h-6" />
-              </div>
-              <div>
-                <p className="text-sm font-bold text-on-surface">أمان وخصوصية بياناتك هي أولويتنا</p>
-                <p className="text-xs text-on-surface-variant mt-0.5">نستخدم أفضل تقنيات الأمان لحماية بياناتك</p>
-              </div>
-            </div>
+
+
           </section>
 
           {/* Left Section (Login Form Side in RTL) */}

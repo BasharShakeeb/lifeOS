@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   CheckCircle2,
@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { useAppStore } from '@/stores/useAppStore';
 import { AuroraStatCard } from '@/components/ui/AuroraStatCard';
+import { supabase } from '@/lib/supabase/client';
 
 export default function DashboardPage() {
   const {
@@ -40,6 +41,20 @@ export default function DashboardPage() {
   } = useAppStore();
 
   const [activeDate, setActiveDate] = useState('اليوم');
+  const [userName, setUserName] = useState<string>('');
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data?.user) {
+        const name =
+          data.user.user_metadata?.full_name ||
+          data.user.user_metadata?.name ||
+          data.user.email?.split('@')[0] ||
+          '';
+        setUserName(name);
+      }
+    });
+  }, []);
 
   // 1. Dynamic Calculations from Zustand Store
   const totalTasks = tasks.length;
@@ -85,7 +100,7 @@ export default function DashboardPage() {
             <span>لوحة الإنتاجية الشخصية</span>
           </div>
           <h1 className="font-display text-2xl md:text-3xl font-extrabold flex items-center gap-3 text-on-surface">
-            👋 مرحباً بك
+            👋 مرحباً{userName ? `، ${userName}` : ' بك'}
           </h1>
           <p className="text-on-surface-variant text-sm md:text-base mt-1">
             لننظم يومك ونحقق أهدافك بكفاءة عبر كافة محاور حياتك.
