@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 
@@ -19,6 +20,10 @@ export const Modal: React.FC<ModalProps> = ({
   subtitle,
   children,
 }) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -33,17 +38,18 @@ export const Modal: React.FC<ModalProps> = ({
     };
   }, [isOpen, onClose]);
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Backdrop */}
+        <div style={{ position: 'fixed', inset: 0, zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', direction: 'ltr' }}>
+          {/* Backdrop — does NOT close on click */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-background/80 backdrop-blur-md"
+            style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.50)', backdropFilter: 'blur(8px)' }}
           />
 
           {/* Modal Dialog Card */}
@@ -51,7 +57,8 @@ export const Modal: React.FC<ModalProps> = ({
             initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
-            className="relative w-full max-w-2xl bg-surface border border-border-subtle rounded-modal shadow-modal z-10 overflow-hidden flex flex-col max-h-[85vh]"
+            className="relative w-full max-w-2xl bg-surface border border-border-subtle rounded-modal shadow-modal overflow-hidden flex flex-col max-h-[85vh]"
+            style={{ direction: 'rtl' }}
           >
             {/* Header */}
             <div className="px-6 py-5 border-b border-border-subtle flex items-center justify-between bg-surface-container-low">
@@ -72,6 +79,7 @@ export const Modal: React.FC<ModalProps> = ({
           </motion.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };
