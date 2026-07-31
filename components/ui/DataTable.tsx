@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { MoreVertical, Edit2, Eye, Trash2 } from 'lucide-react';
+import { Edit2, Eye, Trash2 } from 'lucide-react';
 import { Pagination } from './Pagination';
 
 export interface Column<T> {
@@ -21,6 +21,67 @@ interface DataTableProps<T extends { id: string }> {
   emptyState?: React.ReactNode;
 }
 
+/* ─── Inline Action Button with Tooltip ─── */
+interface ActionBtnProps {
+  onClick: (e: React.MouseEvent) => void;
+  icon: React.ReactNode;
+  label: string;
+  variant: 'neutral' | 'primary' | 'danger';
+  'aria-label'?: string;
+}
+
+const variantStyles: Record<ActionBtnProps['variant'], string> = {
+  neutral:
+    'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high',
+  primary:
+    'text-primary hover:text-primary hover:bg-primary/10',
+  danger:
+    'text-rose-500 hover:text-rose-600 hover:bg-rose-500/10',
+};
+
+function ActionBtn({ onClick, icon, label, variant, 'aria-label': ariaLabel }: ActionBtnProps) {
+  const [showTip, setShowTip] = useState(false);
+
+  return (
+    <div className="relative inline-flex">
+      <button
+        type="button"
+        aria-label={ariaLabel ?? label}
+        onClick={onClick}
+        onMouseEnter={() => setShowTip(true)}
+        onMouseLeave={() => setShowTip(false)}
+        onFocus={() => setShowTip(true)}
+        onBlur={() => setShowTip(false)}
+        className={`
+          relative p-2 rounded-lg transition-all duration-150
+          focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60
+          active:scale-90
+          ${variantStyles[variant]}
+        `}
+      >
+        {icon}
+      </button>
+
+      {/* Tooltip */}
+      {showTip && (
+        <div
+          className="
+            pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2
+            whitespace-nowrap rounded-md bg-gray-900/90 text-white text-[11px] font-medium
+            px-2 py-1 shadow-lg z-[9999]
+            animate-in fade-in-0 zoom-in-95 duration-100
+          "
+        >
+          {label}
+          {/* Caret */}
+          <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900/90" />
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── DataTable ─── */
 export function DataTable<T extends { id: string }>({
   data,
   columns,
@@ -31,16 +92,12 @@ export function DataTable<T extends { id: string }>({
   emptyState,
 }: DataTableProps<T>) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
 
   const totalPages = Math.max(1, Math.ceil(data.length / pageSize));
   const startIndex = (currentPage - 1) * pageSize;
   const currentData = data.slice(startIndex, startIndex + pageSize);
 
-  const toggleMenu = (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setActiveMenuId((prev) => (prev === id ? null : id));
-  };
+  const hasActions = onEdit || onView || onDelete;
 
   if (data.length === 0 && emptyState) {
     return <>{emptyState}</>;
@@ -48,7 +105,8 @@ export function DataTable<T extends { id: string }>({
 
   return (
     <div className="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-card shadow-card overflow-hidden">
-      {/* Desktop Table View */}
+
+      {/* ── Desktop Table View ── */}
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-right text-sm text-on-surface">
           <thead className="bg-surface-container-low text-xs font-semibold uppercase tracking-wider text-on-surface-variant border-b border-outline-variant/40">
@@ -58,8 +116,10 @@ export function DataTable<T extends { id: string }>({
                   {col.header}
                 </th>
               ))}
-              {(onEdit || onView || onDelete) && (
-                <th className="px-6 py-4 font-medium tracking-wider text-left">الإجراءات</th>
+              {hasActions && (
+                <th className="px-6 py-4 font-medium tracking-wider text-center w-32">
+                  الإجراءات
+                </th>
               )}
             </tr>
           </thead>
@@ -72,55 +132,46 @@ export function DataTable<T extends { id: string }>({
               >
                 {columns.map((col, idx) => (
                   <td key={idx} className="px-6 py-4 whitespace-nowrap">
-                    {col.cell ? col.cell(item) : String(col.accessorKey ? item[col.accessorKey] ?? '' : '')}
+                    {col.cell
+                      ? col.cell(item)
+                      : String(col.accessorKey ? item[col.accessorKey] ?? '' : '')}
                   </td>
                 ))}
-                {(onEdit || onView || onDelete) && (
-                  <td className="px-6 py-4 whitespace-nowrap text-left relative" onClick={(e) => e.stopPropagation()}>
-                    <button
-                      onClick={(e) => toggleMenu(item.id, e)}
-                      className="p-1.5 rounded-button text-text-muted hover:text-primary hover:bg-surface-container transition-colors"
-                    >
-                      <MoreVertical className="w-4 h-4" />
-                    </button>
 
-                    {activeMenuId === item.id && (
-                      <div className="absolute left-6 top-10 z-50 w-40 bg-surface border border-border-subtle rounded-card shadow-modal p-1 flex flex-col text-xs font-medium">
-                        {onView && (
-                          <button
-                            onClick={() => {
-                              onView(item);
-                              setActiveMenuId(null);
-                            }}
-                            className="flex items-center gap-2 px-3 py-2 text-text-muted hover:text-primary hover:bg-surface-container rounded-md text-right"
-                          >
-                            <Eye className="w-3.5 h-3.5" /> عرض التفاصيل
-                          </button>
-                        )}
-                        {onEdit && (
-                          <button
-                            onClick={() => {
-                              onEdit(item);
-                              setActiveMenuId(null);
-                            }}
-                            className="flex items-center gap-2 px-3 py-2 text-text-muted hover:text-primary hover:bg-surface-container rounded-md text-right"
-                          >
-                            <Edit2 className="w-3.5 h-3.5" /> تعديل
-                          </button>
-                        )}
-                        {onDelete && (
-                          <button
-                            onClick={() => {
-                              onDelete(item);
-                              setActiveMenuId(null);
-                            }}
-                            className="flex items-center gap-2 px-3 py-2 text-rose-600 hover:bg-rose-500/10 rounded-md text-right"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" /> حذف
-                          </button>
-                        )}
-                      </div>
-                    )}
+                {hasActions && (
+                  <td
+                    className="px-4 py-3 whitespace-nowrap"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="flex items-center justify-center gap-0.5">
+                      {onView && (
+                        <ActionBtn
+                          onClick={() => onView(item)}
+                          icon={<Eye className="w-4 h-4" />}
+                          label="عرض التفاصيل"
+                          variant="neutral"
+                          aria-label="عرض تفاصيل العنصر"
+                        />
+                      )}
+                      {onEdit && (
+                        <ActionBtn
+                          onClick={() => onEdit(item)}
+                          icon={<Edit2 className="w-4 h-4" />}
+                          label="تعديل"
+                          variant="primary"
+                          aria-label="تعديل العنصر"
+                        />
+                      )}
+                      {onDelete && (
+                        <ActionBtn
+                          onClick={() => onDelete(item)}
+                          icon={<Trash2 className="w-4 h-4" />}
+                          label="حذف"
+                          variant="danger"
+                          aria-label="حذف العنصر"
+                        />
+                      )}
+                    </div>
                   </td>
                 )}
               </tr>
@@ -129,45 +180,61 @@ export function DataTable<T extends { id: string }>({
         </table>
       </div>
 
-      {/* Mobile Card List View */}
+      {/* ── Mobile Card List View ── */}
       <div className="md:hidden divide-y divide-border-subtle">
         {currentData.map((item) => (
           <div
             key={item.id}
             onClick={() => onView && onView(item)}
-            className="p-4 space-y-3 hover:bg-surface-container-low transition-colors"
+            className="p-4 space-y-3 hover:bg-surface-container-low transition-colors cursor-pointer"
           >
             {columns.map((col, idx) => (
               <div key={idx} className="flex justify-between items-center text-sm">
                 <span className="text-xs font-mono text-text-muted">{col.header}:</span>
                 <span className="text-on-surface font-medium">
-                  {col.cell ? col.cell(item) : String(col.accessorKey ? item[col.accessorKey] ?? '' : '')}
+                  {col.cell
+                    ? col.cell(item)
+                    : String(col.accessorKey ? item[col.accessorKey] ?? '' : '')}
                 </span>
               </div>
             ))}
-            <div className="pt-2 flex justify-end gap-2 border-t border-border-subtle" onClick={(e) => e.stopPropagation()}>
-              {onView && (
-                <button
-                  onClick={() => onView(item)}
-                  className="px-3 py-1.5 rounded-button bg-surface-container text-xs text-on-surface hover:bg-surface-container-high"
-                >
-                  التفاصيل
-                </button>
-              )}
-              {onEdit && (
-                <button
-                  onClick={() => onEdit(item)}
-                  className="px-3 py-1.5 rounded-button bg-primary/10 text-xs text-primary hover:bg-primary/20"
-                >
-                  تعديل
-                </button>
-              )}
-            </div>
+
+            {hasActions && (
+              <div
+                className="pt-2 flex items-center justify-end gap-1 border-t border-border-subtle"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {onView && (
+                  <ActionBtn
+                    onClick={() => onView(item)}
+                    icon={<Eye className="w-4 h-4" />}
+                    label="عرض"
+                    variant="neutral"
+                  />
+                )}
+                {onEdit && (
+                  <ActionBtn
+                    onClick={() => onEdit(item)}
+                    icon={<Edit2 className="w-4 h-4" />}
+                    label="تعديل"
+                    variant="primary"
+                  />
+                )}
+                {onDelete && (
+                  <ActionBtn
+                    onClick={() => onDelete(item)}
+                    icon={<Trash2 className="w-4 h-4" />}
+                    label="حذف"
+                    variant="danger"
+                  />
+                )}
+              </div>
+            )}
           </div>
         ))}
       </div>
 
-      {/* Pagination Footer */}
+      {/* ── Pagination Footer ── */}
       {totalPages > 1 && (
         <div className="px-6 py-3 bg-surface-container-low border-t border-outline-variant/40">
           <Pagination

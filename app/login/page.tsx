@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -32,11 +32,24 @@ export default function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    // Check if user is already logged in
+    supabase.auth.getSession().then(({ data }) => {
+      if (data?.session?.user) {
+        // User already has an active session
+        router.replace('/dashboard');
+      }
+    });
+  }, [router]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
+      // Clear any previous active session before attempting new login/signup
+      await supabase.auth.signOut();
+
       if (isSignUpMode) {
         // Sign Up Mode
         const { data, error } = await supabase.auth.signUp({
