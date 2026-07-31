@@ -134,7 +134,7 @@ export const UniversalFormEngine: React.FC<UniversalFormEngineProps> = ({
   };
 
   // Submit Handler
-  const onSubmit = (data: any, createAnother = false) => {
+  const onSubmit = async (data: any, createAnother = false) => {
     try {
       const isEdit = Boolean(initialData?.id);
 
@@ -156,13 +156,13 @@ export const UniversalFormEngine: React.FC<UniversalFormEngineProps> = ({
         };
 
         if (isEdit && initialData.id) {
-          updateTask(initialData.id, taskPayload);
+          await updateTask(initialData.id, taskPayload);
           triggerUndoableAction({
             successMessage: 'تم تحديث المهمة بنجاح',
             onUndo: () => updateTask(initialData.id, initialData),
           });
         } else {
-          addTask(taskPayload);
+          await addTask(taskPayload);
           triggerUndoableAction({
             successMessage: 'تمت إضافة المهمة بنجاح',
             onUndo: () => console.log('Undo task addition'),

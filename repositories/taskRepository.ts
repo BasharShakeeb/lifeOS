@@ -1,42 +1,63 @@
 import { Task } from "@/types";
-import { useAppStore } from "@/stores/useAppStore";
+import { apiClient } from "@/services/apiClient";
 import { logger } from "@/lib/logger";
 
+export interface MeResponse {
+  profileId: string;
+  fullName: string | null;
+  email: string | null;
+  defaultWorkspaceId: string | null;
+}
+
 export interface ITaskRepository {
-  getAll(): Promise<Task[]>;
-  getById(id: string): Promise<Task | undefined>;
-  create(task: Omit<Task, "id" | "createdAt">): Promise<Task>;
+  getMe(): Promise<MeResponse>;
+  getAll(workspaceId?: string): Promise<Task[]>;
+  create(task: Partial<Task>, workspaceId?: string): Promise<Task>;
   update(id: string, task: Partial<Task>): Promise<Task>;
+  toggle(id: string): Promise<Task>;
   delete(id: string): Promise<boolean>;
 }
 
+/**
+ * Task repository backed by the FastAPI backend.
+ * The backend already returns tasks in the frontend `Task` shape
+ * (camelCase fields, lowercase enums), so no client-side mapping is needed.
+ */
 export class TaskRepository implements ITaskRepository {
-  async getAll(): Promise<Task[]> {
-    logger.debug("TaskRepository: Fetching all tasks");
-    return useAppStore.getState().tasks;
+  async getMe(): Promise<MeResponse> {
+    const res = await apiClient.get<MeResponse>("/api/me");
+    return res.data;
   }
 
-  async getById(id: string): Promise<Task | undefined> {
-    return useAppStore.getState().tasks.find((t: Task) => t.id === id);
+  async getAll(workspaceId?: string): Promise<Task[]> {
+    logger.debug("TaskRepository: Fetching tasks from API");
+    const query = workspaceId ? `?workspaceId=${encodeURIComponent(workspaceId)}` : "";
+    const res = await apiClient.get<Task[]>(`/api/tasks${query}`);
+    return res.data;
   }
 
-  async create(taskData: Omit<Task, "id" | "createdAt">): Promise<Task> {
-    logger.info("TaskRepository: Creating new task", { title: taskData.title });
-    const store = useAppStore.getState();
-    store.addTask(taskData);
-    return store.tasks[0];
+  async create(task: Partial<Task>, workspaceId?: string): Promise<Task> {
+    logger.info("TaskRepository: Creating task via API", { title: task.title });
+    const query = workspaceId ? `?workspaceId=${encodeURIComponent(workspaceId)}` : "";
+    const res = await apiClient.post<Task>(`/api/tasks${query}`, task);
+    return res.data;
   }
 
-  async update(id: string, taskData: Partial<Task>): Promise<Task> {
-    logger.info(`TaskRepository: Updating task ${id}`);
-    const store = useAppStore.getState();
-    store.updateTask(id, taskData);
-    return store.tasks.find((t: Task) => t.id === id)!;
+  async update(id: string, task: Partial<Task>): Promise<Task> {
+    logger.info(`TaskRepository: Updating task ${id} via API`);
+    const res = await apiClient.patch<Task>(`/api/tasks/${id}`, task);
+    return res.data;
+  }
+
+  async toggle(id: string): Promise<Task> {
+    logger.info(`TaskRepository: Toggling task ${id} via API`);
+    const res = await apiClient.patch<Task>(`/api/tasks/${id}/toggle`);
+    return res.data;
   }
 
   async delete(id: string): Promise<boolean> {
-    logger.info(`TaskRepository: Deleting task ${id}`);
-    useAppStore.getState().deleteTask(id);
+    logger.info(`TaskRepository: Deleting task ${id} via API`);
+    await apiClient.delete<void>(`/api/tasks/${id}`);
     return true;
   }
 }

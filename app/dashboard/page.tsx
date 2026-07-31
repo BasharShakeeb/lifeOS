@@ -38,6 +38,7 @@ export default function DashboardPage() {
     toggleTaskCompletion,
     openDrawer,
     openModal,
+    fetchInitialData,
   } = useAppStore();
 
   const [activeDate, setActiveDate] = useState('اليوم');
@@ -52,9 +53,11 @@ export default function DashboardPage() {
           data.user.email?.split('@')[0] ||
           '';
         setUserName(name);
+        // Load persisted data from the backend once the session is confirmed.
+        fetchInitialData();
       }
     });
-  }, []);
+  }, [fetchInitialData]);
 
   // 1. Dynamic Calculations from Zustand Store
   const totalTasks = tasks.length;

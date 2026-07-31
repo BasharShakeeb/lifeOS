@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { Task, Hub, Project, Assignment, Habit, Goal, HealthRecord } from '@/types';
 import { supabaseRepository } from '@/repositories/supabaseRepository';
+import { taskRepository } from '@/repositories/taskRepository';
+import { logger } from '@/lib/logger';
 
 interface AppState {
   // Sidebar Collapsed State
@@ -32,15 +34,16 @@ interface AppState {
   openModal: (type: 'task' | 'hub' | 'project' | 'assignment' | 'habit' | 'goal' | 'health', data: any) => void;
   closeModal: () => void;
 
-  // Sync state with Supabase
+  // Sync state with backend
+  currentWorkspaceId: string | null;
   fetchInitialData: (workspaceId?: string) => Promise<void>;
 
   // Datasets & CRUD operations
   tasks: Task[];
-  addTask: (task: Omit<Task, 'id' | 'createdAt'>) => void;
-  updateTask: (id: string, task: Partial<Task>) => void;
-  deleteTask: (id: string) => void;
-  toggleTaskCompletion: (id: string) => void;
+  addTask: (task: Omit<Task, 'id' | 'createdAt'>) => Promise<void>;
+  updateTask: (id: string, task: Partial<Task>) => Promise<void>;
+  deleteTask: (id: string) => Promise<void>;
+  toggleTaskCompletion: (id: string) => Promise<void>;
 
   hubs: Hub[];
   addHub: (hub: Omit<Hub, 'id' | 'createdAt' | 'projectCount' | 'taskCount' | 'goalCount'>) => void;
@@ -90,7 +93,7 @@ const initialGoals: Goal[] = [];
 
 const initialHealthRecords: HealthRecord[] = [];
 
-export const useAppStore = create<AppState>((set) => ({
+export const useAppStore = create<AppState>((set, get) => ({
   isSidebarCollapsed: false,
   toggleSidebar: () => set((state) => ({ isSidebarCollapsed: !state.isSidebarCollapsed })),
 
@@ -108,44 +111,59 @@ export const useAppStore = create<AppState>((set) => ({
   openModal: (type, data) => set({ activeModal: { isOpen: true, type, data } }),
   closeModal: () => set((state) => ({ activeModal: { ...state.activeModal, isOpen: false } })),
 
-  fetchInitialData: async (workspaceId = 'default') => {
+  currentWorkspaceId: null,
+
+  fetchInitialData: async (workspaceId) => {
     try {
+      // Resolve the real workspace id from the backend when not provided.
+      let resolvedWorkspaceId = workspaceId ?? get().currentWorkspaceId;
+      if (!resolvedWorkspaceId) {
+        const me = await taskRepository.getMe();
+        resolvedWorkspaceId = me.defaultWorkspaceId;
+      }
+      if (!resolvedWorkspaceId) {
+        logger.warn('No workspace found for current user; skipping initial load.');
+        return;
+      }
+
       const [fetchedTasks, fetchedProjects, fetchedHubs] = await Promise.all([
-        supabaseRepository.getTasks(workspaceId),
-        supabaseRepository.getProjects(workspaceId),
-        supabaseRepository.getHubs(workspaceId),
+        taskRepository.getAll(resolvedWorkspaceId),
+        supabaseRepository.getProjects(resolvedWorkspaceId),
+        supabaseRepository.getHubs(resolvedWorkspaceId),
       ]);
 
       set({
-        tasks: fetchedTasks.length > 0 ? fetchedTasks : initialTasks,
+        currentWorkspaceId: resolvedWorkspaceId,
+        tasks: fetchedTasks,
         projects: fetchedProjects.length > 0 ? fetchedProjects : initialProjects,
         hubs: fetchedHubs.length > 0 ? fetchedHubs : initialHubs,
       });
     } catch (error) {
-      console.warn('Using local fallback state, Supabase connection error:', error);
+      logger.error('fetchInitialData failed:', error);
     }
   },
 
   tasks: initialTasks,
-  addTask: (task) =>
+  addTask: async (task) => {
+    const created = await taskRepository.create(task, get().currentWorkspaceId ?? undefined);
+    set((state) => ({ tasks: [created, ...state.tasks] }));
+  },
+  updateTask: async (id, updatedFields) => {
+    const updated = await taskRepository.update(id, updatedFields);
     set((state) => ({
-      tasks: [
-        { ...task, id: `t-${Date.now()}`, createdAt: new Date().toISOString().split('T')[0] },
-        ...state.tasks,
-      ],
-    })),
-  updateTask: (id, updatedFields) =>
+      tasks: state.tasks.map((t) => (t.id === id ? updated : t)),
+    }));
+  },
+  deleteTask: async (id) => {
+    await taskRepository.delete(id);
+    set((state) => ({ tasks: state.tasks.filter((t) => t.id !== id) }));
+  },
+  toggleTaskCompletion: async (id) => {
+    const updated = await taskRepository.toggle(id);
     set((state) => ({
-      tasks: state.tasks.map((t) => (t.id === id ? { ...t, ...updatedFields } : t)),
-    })),
-  deleteTask: (id) =>
-    set((state) => ({ tasks: state.tasks.filter((t) => t.id !== id) })),
-  toggleTaskCompletion: (id) =>
-    set((state) => ({
-      tasks: state.tasks.map((t) =>
-        t.id === id ? { ...t, status: t.status === 'completed' ? 'in_progress' : 'completed' } : t
-      ),
-    })),
+      tasks: state.tasks.map((t) => (t.id === id ? updated : t)),
+    }));
+  },
 
   hubs: initialHubs,
   addHub: (hub) =>

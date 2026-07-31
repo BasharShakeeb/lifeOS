@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase/client';
-import { Task, Project, Hub } from '@/types';
+import { Project, Hub } from '@/types';
 import { logger } from '@/lib/logger';
 
 /**
@@ -8,80 +8,6 @@ import { logger } from '@/lib/logger';
  * while adhering to Row Level Security (RLS) policies.
  */
 export class SupabaseRepository {
-  // TASKS API
-  async getTasks(workspaceId: string): Promise<Task[]> {
-    const { data, error } = await (supabase.from('tasks') as any)
-      .select('*')
-      .eq('workspace_id', workspaceId)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      logger.error('Supabase getTasks error:', error);
-      return [];
-    }
-
-    return (data || []).map((t: any): Task => ({
-      id: t.id,
-      title: t.title,
-      description: t.description || '',
-      status: t.status === 'COMPLETED' ? 'completed' : 'in_progress',
-      priority: t.priority.toLowerCase() as any,
-      dueDate: t.due_date ? t.due_date.split('T')[0] : '',
-      tags: [],
-      projectId: t.project_id || undefined,
-      hubId: t.hub_id || undefined,
-      createdAt: t.created_at,
-    }));
-  }
-
-  async createTask(workspaceId: string, profileId: string, task: Partial<Task>): Promise<Task | null> {
-    const { data, error } = await (supabase.from('tasks') as any)
-      .insert({
-        workspace_id: workspaceId,
-        created_by: profileId,
-        title: task.title || 'مهمة جديدة',
-        description: task.description || null,
-        status: (task.status?.toUpperCase() || 'TODO') as any,
-        priority: (task.priority?.toUpperCase() || 'MEDIUM') as any,
-        due_date: task.dueDate ? new Date(task.dueDate).toISOString() : null,
-      })
-      .select()
-      .single();
-
-    if (error || !data) {
-      logger.error('Supabase createTask error:', error);
-      return null;
-    }
-
-    const t: any = data;
-    return {
-      id: t.id,
-      title: t.title,
-      description: t.description || '',
-      status: t.status === 'COMPLETED' ? 'completed' : 'in_progress',
-      priority: t.priority.toLowerCase() as any,
-      dueDate: t.due_date ? t.due_date.split('T')[0] : '',
-      tags: [],
-      createdAt: t.created_at,
-    };
-  }
-
-  async toggleTaskStatus(taskId: string, currentStatus: string): Promise<boolean> {
-    const nextStatus = currentStatus === 'completed' ? 'TODO' : 'COMPLETED';
-    const { error } = await (supabase.from('tasks') as any)
-      .update({
-        status: nextStatus as any,
-        completed_at: nextStatus === 'COMPLETED' ? new Date().toISOString() : null,
-      })
-      .eq('id', taskId);
-
-    if (error) {
-      logger.error('Supabase toggleTaskStatus error:', error);
-      return false;
-    }
-    return true;
-  }
-
   // PROJECTS API
   async getProjects(workspaceId: string): Promise<Project[]> {
     const { data, error } = await (supabase.from('projects') as any)
