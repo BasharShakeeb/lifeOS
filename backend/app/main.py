@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import get_settings
-from app.routers import bootstrap, hubs, tasks
+from app.routers import assignments, bootstrap, goals, habits, health_records, hubs, projects, tasks
 
 settings = get_settings()
 
@@ -30,6 +30,11 @@ app.add_middleware(
 app.include_router(bootstrap.router)
 app.include_router(tasks.router)
 app.include_router(hubs.router)
+app.include_router(projects.router)
+app.include_router(goals.router)
+app.include_router(habits.router)
+app.include_router(assignments.router)
+app.include_router(health_records.router)
 
 
 @app.get("/health", tags=["health"])
