@@ -12,6 +12,9 @@ from app.core.config import get_settings
 from app.routers import assignments, bootstrap, goals, habits, health_records, hubs, projects, tasks
 
 settings = get_settings()
+frontend_origins = [
+    origin.strip() for origin in settings.frontend_origin.split(",") if origin.strip()
+]
 
 app = FastAPI(
     title="LifeOS Backend API",
@@ -21,7 +24,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.frontend_origin],
+    allow_origins=frontend_origins or ["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
