@@ -12,6 +12,7 @@ from app.core.config import get_settings
 from app.routers import assignments, bootstrap, goals, habits, health_records, hubs, projects, tasks
 
 settings = get_settings()
+print("FRONTEND_ORIGIN =", settings.frontend_origin)
 frontend_origins = [
     origin.strip() for origin in settings.frontend_origin.split(",") if origin.strip()
 ]
