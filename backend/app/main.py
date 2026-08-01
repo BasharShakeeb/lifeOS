@@ -37,6 +37,12 @@ app.include_router(assignments.router)
 app.include_router(health_records.router)
 
 
+@app.get("/", tags=["health"])
+def root() -> dict:
+    """Root route to confirm the API is running."""
+    return {"status": "ok", "message": "LifeOS backend is running", "docs": "/docs"}
+
+
 @app.get("/health", tags=["health"])
 def health_check() -> dict:
     """Simple liveness probe."""
