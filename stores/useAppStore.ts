@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { Task, Hub, Project, Assignment, Habit, Goal, HealthRecord } from '@/types';
 import { supabaseRepository } from '@/repositories/supabaseRepository';
 import { taskRepository } from '@/repositories/taskRepository';
+import { projectRepository } from '@/repositories/projectRepository';
 import { logger } from '@/lib/logger';
 
 interface AppState {
@@ -51,9 +52,9 @@ interface AppState {
   deleteHub: (id: string) => void;
 
   projects: Project[];
-  addProject: (project: Omit<Project, 'id' | 'createdAt' | 'completedTasksCount'>) => void;
-  updateProject: (id: string, project: Partial<Project>) => void;
-  deleteProject: (id: string) => void;
+  addProject: (project: Omit<Project, 'id' | 'createdAt' | 'completedTasksCount'>) => Promise<void>;
+  updateProject: (id: string, project: Partial<Project>) => Promise<void>;
+  deleteProject: (id: string) => Promise<void>;
 
   assignments: Assignment[];
   addAssignment: (assignment: Omit<Assignment, 'id' | 'createdAt'>) => void;
@@ -128,7 +129,7 @@ export const useAppStore = create<AppState>((set, get) => ({
 
       const [fetchedTasks, fetchedProjects, fetchedHubs] = await Promise.all([
         taskRepository.getAll(resolvedWorkspaceId),
-        supabaseRepository.getProjects(resolvedWorkspaceId),
+        projectRepository.getAll(resolvedWorkspaceId),
         supabaseRepository.getHubs(resolvedWorkspaceId),
       ]);
 
@@ -187,24 +188,20 @@ export const useAppStore = create<AppState>((set, get) => ({
   deleteHub: (id) => set((state) => ({ hubs: state.hubs.filter((h) => h.id !== id) })),
 
   projects: initialProjects,
-  addProject: (project) =>
+  addProject: async (project) => {
+    const created = await projectRepository.create(project, get().currentWorkspaceId ?? undefined);
+    set((state) => ({ projects: [created, ...state.projects] }));
+  },
+  updateProject: async (id, updatedFields) => {
+    const updated = await projectRepository.update(id, updatedFields);
     set((state) => ({
-      projects: [
-        {
-          ...project,
-          id: `p-${Date.now()}`,
-          completedTasksCount: 0,
-          createdAt: new Date().toISOString().split('T')[0],
-        },
-        ...state.projects,
-      ],
-    })),
-  updateProject: (id, updatedFields) =>
-    set((state) => ({
-      projects: state.projects.map((p) => (p.id === id ? { ...p, ...updatedFields } : p)),
-    })),
-  deleteProject: (id) =>
-    set((state) => ({ projects: state.projects.filter((p) => p.id !== id) })),
+      projects: state.projects.map((p) => (p.id === id ? updated : p)),
+    }));
+  },
+  deleteProject: async (id) => {
+    await projectRepository.delete(id);
+    set((state) => ({ projects: state.projects.filter((p) => p.id !== id) }));
+  },
 
   assignments: initialAssignments,
   addAssignment: (assignment) =>

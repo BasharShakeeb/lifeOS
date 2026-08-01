@@ -184,24 +184,25 @@ export const UniversalFormEngine: React.FC<UniversalFormEngineProps> = ({
         }
       } else if (schema.id === 'project-schema') {
         if (isEdit && initialData.id) {
-          updateProject(initialData.id, {
+          await updateProject(initialData.id, {
             name: data.name || data.title,
             description: data.description || '',
-            hubId: data.hubId || initialData.hubId || 'h-1',
+            hubId: data.hubId || initialData.hubId || undefined,
             endDate: data.endDate || initialData.endDate,
+            status: 'in_progress',
           });
           toast('تم تحديث المشروع بنجاح', 'success');
         } else {
-          addProject({
+          await addProject({
             name: data.name || data.title,
             description: data.description || '',
-            hubId: data.hubId || 'h-1',
-            hubName: 'عام',
+            hubId: data.hubId || '',
+            hubName: '',
             status: 'in_progress',
-            progress: 10,
+            progress: 0,
             startDate: new Date().toISOString().split('T')[0],
-            endDate: data.endDate || '2026-12-31',
-            tasksCount: 1,
+            endDate: data.endDate || '',
+            tasksCount: 0,
           });
           toast('تم إضافة المشروع بنجاح', 'success');
         }
