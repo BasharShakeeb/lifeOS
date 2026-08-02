@@ -63,7 +63,13 @@ export const UniversalFormEngine: React.FC<UniversalFormEngineProps> = ({
     dueDate: initialData?.dueDate || new Date().toISOString().split('T')[0],
     dueTime: '09:00',
     priority: initialData?.priority || 'medium',
-    status: initialData?.status || 'not_started',
+    status:
+      initialData?.status ||
+      (schema.id === 'project-schema'
+        ? 'in_progress'
+        : schema.id === 'goal-schema'
+          ? 'in_progress'
+          : 'not_started'),
     projectId: initialData?.projectId || '',
     hubId: initialData?.hubId || '',
     tags: initialData?.tags || [],
