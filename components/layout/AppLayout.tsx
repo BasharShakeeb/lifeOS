@@ -1,15 +1,27 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { TopNav } from './TopNav';
 import { MobileNav } from './MobileNav';
 import { GlobalModalManager } from '@/components/modals/GlobalModalManager';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { useAppStore } from '@/stores/useAppStore';
+import { supabase } from '@/lib/supabase/client';
 
 export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isSidebarCollapsed } = useAppStore();
+  const { isSidebarCollapsed, fetchInitialData } = useAppStore();
+
+  // Load persisted data from the backend once the session is confirmed,
+  // so refreshing any dashboard route (e.g. /dashboard/projects) shows
+  // the existing records from the database.
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data?.user) {
+        fetchInitialData();
+      }
+    });
+  }, [fetchInitialData]);
 
   return (
     <div className="min-h-screen bg-background text-on-surface flex flex-col antialiased overflow-x-hidden">

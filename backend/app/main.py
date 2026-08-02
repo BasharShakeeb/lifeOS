@@ -16,6 +16,12 @@ print("FRONTEND_ORIGIN =", settings.frontend_origin)
 frontend_origins = [
     origin.strip() for origin in settings.frontend_origin.split(",") if origin.strip()
 ]
+frontend_origins.extend([
+    "http://localhost:3000",
+    "http://0.0.0.0:3000",
+    "http://127.0.0.1:3000",
+])
+frontend_origins = list(dict.fromkeys(frontend_origins))
 
 app = FastAPI(
     title="LifeOS Backend API",

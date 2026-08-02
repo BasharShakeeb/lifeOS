@@ -16,6 +16,8 @@ export async function GET(request: NextRequest) {
     }
   }
 
+  const requestOrigin = requestUrl.origin.replace(/0\.0\.0\.0|127\.0\.0\.1/i, 'localhost');
+
   // Always redirect to /dashboard after processing OAuth callback
-  return NextResponse.redirect(new URL('/dashboard', request.url));
+  return NextResponse.redirect(new URL('/dashboard', requestOrigin));
 }

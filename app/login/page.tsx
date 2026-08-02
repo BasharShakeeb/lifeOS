@@ -96,10 +96,13 @@ export default function LoginPage() {
     toast('جاري الاتصال بخدمة تسجيل الدخول عبر Google...', 'info');
 
     try {
+      const rawOrigin = window.location.origin;
+      const normalizedOrigin = rawOrigin.replace(/0\.0\.0\.0|127\.0\.0\.1/i, 'localhost');
+
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${normalizedOrigin}/auth/callback`,
         },
       });
 
