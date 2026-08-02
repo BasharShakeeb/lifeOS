@@ -1,8 +1,12 @@
 import { create } from 'zustand';
 import { Task, Hub, Project, Assignment, Habit, Goal, HealthRecord } from '@/types';
-import { supabaseRepository } from '@/repositories/supabaseRepository';
 import { taskRepository } from '@/repositories/taskRepository';
 import { projectRepository } from '@/repositories/projectRepository';
+import { hubRepository } from '@/repositories/hubRepository';
+import { assignmentRepository } from '@/repositories/assignmentRepository';
+import { goalRepository } from '@/repositories/goalRepository';
+import { habitRepository } from '@/repositories/habitRepository';
+import { healthRecordRepository } from '@/repositories/healthRecordRepository';
 import { logger } from '@/lib/logger';
 
 interface AppState {
@@ -47,9 +51,9 @@ interface AppState {
   toggleTaskCompletion: (id: string) => Promise<void>;
 
   hubs: Hub[];
-  addHub: (hub: Omit<Hub, 'id' | 'createdAt' | 'projectCount' | 'taskCount' | 'goalCount'>) => void;
-  updateHub: (id: string, hub: Partial<Hub>) => void;
-  deleteHub: (id: string) => void;
+  addHub: (hub: Omit<Hub, 'id' | 'createdAt' | 'projectCount' | 'taskCount' | 'goalCount'>) => Promise<void>;
+  updateHub: (id: string, hub: Partial<Hub>) => Promise<void>;
+  deleteHub: (id: string) => Promise<void>;
 
   projects: Project[];
   addProject: (project: Omit<Project, 'id' | 'createdAt' | 'completedTasksCount'>) => Promise<void>;
@@ -57,25 +61,25 @@ interface AppState {
   deleteProject: (id: string) => Promise<void>;
 
   assignments: Assignment[];
-  addAssignment: (assignment: Omit<Assignment, 'id' | 'createdAt'>) => void;
-  updateAssignment: (id: string, assignment: Partial<Assignment>) => void;
-  deleteAssignment: (id: string) => void;
+  addAssignment: (assignment: Omit<Assignment, 'id' | 'createdAt'>) => Promise<void>;
+  updateAssignment: (id: string, assignment: Partial<Assignment>) => Promise<void>;
+  deleteAssignment: (id: string) => Promise<void>;
 
   habits: Habit[];
-  addHabit: (habit: Omit<Habit, 'id' | 'createdAt' | 'streak' | 'bestStreak' | 'completedToday' | 'history'>) => void;
-  updateHabit: (id: string, habit: Partial<Habit>) => void;
-  deleteHabit: (id: string) => void;
-  toggleHabitToday: (id: string) => void;
+  addHabit: (habit: Omit<Habit, 'id' | 'createdAt' | 'streak' | 'bestStreak' | 'completedToday' | 'history'>) => Promise<void>;
+  updateHabit: (id: string, habit: Partial<Habit>) => Promise<void>;
+  deleteHabit: (id: string) => Promise<void>;
+  toggleHabitToday: (id: string) => Promise<void>;
 
   goals: Goal[];
-  addGoal: (goal: Omit<Goal, 'id' | 'createdAt' | 'status'>) => void;
-  updateGoal: (id: string, goal: Partial<Goal>) => void;
-  deleteGoal: (id: string) => void;
+  addGoal: (goal: Omit<Goal, 'id' | 'createdAt' | 'status'>) => Promise<void>;
+  updateGoal: (id: string, goal: Partial<Goal>) => Promise<void>;
+  deleteGoal: (id: string) => Promise<void>;
 
   healthRecords: HealthRecord[];
-  addHealthRecord: (record: Omit<HealthRecord, 'id' | 'createdAt'>) => void;
-  updateHealthRecord: (id: string, record: Partial<HealthRecord>) => void;
-  deleteHealthRecord: (id: string) => void;
+  addHealthRecord: (record: Omit<HealthRecord, 'id' | 'createdAt'>) => Promise<void>;
+  updateHealthRecord: (id: string, record: Partial<HealthRecord>) => Promise<void>;
+  deleteHealthRecord: (id: string) => Promise<void>;
 }
 
 // Data collections start empty and are ready for backend integration.
@@ -127,10 +131,14 @@ export const useAppStore = create<AppState>((set, get) => ({
         return;
       }
 
-      const [fetchedTasks, fetchedProjects, fetchedHubs] = await Promise.all([
+      const [fetchedTasks, fetchedProjects, fetchedHubs, fetchedAssignments, fetchedGoals, fetchedHabits, fetchedHealthRecords] = await Promise.all([
         taskRepository.getAll(resolvedWorkspaceId),
         projectRepository.getAll(resolvedWorkspaceId),
-        supabaseRepository.getHubs(resolvedWorkspaceId),
+        hubRepository.getAll(resolvedWorkspaceId),
+        assignmentRepository.getAll(resolvedWorkspaceId),
+        goalRepository.getAll(resolvedWorkspaceId),
+        habitRepository.getAll(resolvedWorkspaceId),
+        healthRecordRepository.getAll(resolvedWorkspaceId),
       ]);
 
       set({
@@ -138,6 +146,10 @@ export const useAppStore = create<AppState>((set, get) => ({
         tasks: fetchedTasks,
         projects: fetchedProjects.length > 0 ? fetchedProjects : initialProjects,
         hubs: fetchedHubs.length > 0 ? fetchedHubs : initialHubs,
+        assignments: fetchedAssignments.length > 0 ? fetchedAssignments : initialAssignments,
+        goals: fetchedGoals.length > 0 ? fetchedGoals : initialGoals,
+        habits: fetchedHabits.length > 0 ? fetchedHabits : initialHabits,
+        healthRecords: fetchedHealthRecords.length > 0 ? fetchedHealthRecords : initialHealthRecords,
       });
     } catch (error) {
       logger.error('fetchInitialData failed:', error);
@@ -167,25 +179,20 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   hubs: initialHubs,
-  addHub: (hub) =>
+  addHub: async (hub) => {
+    const created = await hubRepository.create(hub, get().currentWorkspaceId ?? undefined);
+    set((state) => ({ hubs: [created, ...state.hubs] }));
+  },
+  updateHub: async (id, updatedFields) => {
+    const updated = await hubRepository.update(id, updatedFields);
     set((state) => ({
-      hubs: [
-        {
-          ...hub,
-          id: `h-${Date.now()}`,
-          projectCount: 0,
-          taskCount: 0,
-          goalCount: 0,
-          createdAt: new Date().toISOString().split('T')[0],
-        },
-        ...state.hubs,
-      ],
-    })),
-  updateHub: (id, updatedFields) =>
-    set((state) => ({
-      hubs: state.hubs.map((h) => (h.id === id ? { ...h, ...updatedFields } : h)),
-    })),
-  deleteHub: (id) => set((state) => ({ hubs: state.hubs.filter((h) => h.id !== id) })),
+      hubs: state.hubs.map((h) => (h.id === id ? updated : h)),
+    }));
+  },
+  deleteHub: async (id) => {
+    await hubRepository.delete(id);
+    set((state) => ({ hubs: state.hubs.filter((h) => h.id !== id) }));
+  },
 
   projects: initialProjects,
   addProject: async (project) => {
@@ -204,101 +211,81 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   assignments: initialAssignments,
-  addAssignment: (assignment) =>
+  addAssignment: async (assignment) => {
+    const created = await assignmentRepository.create(assignment, get().currentWorkspaceId ?? undefined);
+    set((state) => ({ assignments: [created, ...state.assignments] }));
+  },
+  updateAssignment: async (id, updatedFields) => {
+    const updated = await assignmentRepository.update(id, updatedFields);
     set((state) => ({
-      assignments: [
-        {
-          ...assignment,
-          id: `a-${Date.now()}`,
-          createdAt: new Date().toISOString().split('T')[0],
-        },
-        ...state.assignments,
-      ],
-    })),
-  updateAssignment: (id, updatedFields) =>
-    set((state) => ({
-      assignments: state.assignments.map((a) => (a.id === id ? { ...a, ...updatedFields } : a)),
-    })),
-  deleteAssignment: (id) =>
-    set((state) => ({ assignments: state.assignments.filter((a) => a.id !== id) })),
+      assignments: state.assignments.map((a) => (a.id === id ? updated : a)),
+    }));
+  },
+  deleteAssignment: async (id) => {
+    await assignmentRepository.delete(id);
+    set((state) => ({ assignments: state.assignments.filter((a) => a.id !== id) }));
+  },
 
   habits: initialHabits,
-  addHabit: (habit) =>
+  addHabit: async (habit) => {
+    const created = await habitRepository.create(habit, get().currentWorkspaceId ?? undefined);
+    set((state) => ({ habits: [created, ...state.habits] }));
+  },
+  updateHabit: async (id, updatedFields) => {
+    const updated = await habitRepository.update(id, updatedFields);
     set((state) => ({
-      habits: [
-        {
-          ...habit,
-          id: `hab-${Date.now()}`,
-          streak: 1,
-          bestStreak: 1,
-          completedToday: false,
-          history: [],
-          createdAt: new Date().toISOString().split('T')[0],
-        },
-        ...state.habits,
-      ],
-    })),
-  updateHabit: (id, updatedFields) =>
+      habits: state.habits.map((h) => (h.id === id ? updated : h)),
+    }));
+  },
+  deleteHabit: async (id) => {
+    await habitRepository.delete(id);
+    set((state) => ({ habits: state.habits.filter((h) => h.id !== id) }));
+  },
+  toggleHabitToday: async (id) => {
+    const current = get().habits.find((h) => h.id === id);
+    if (!current) return;
+    const nextCompleted = !current.completedToday;
+    const nextStreak = nextCompleted ? current.streak + 1 : Math.max(0, current.streak - 1);
+    const updated = await habitRepository.update(id, {
+      streak: nextStreak,
+      bestStreak: Math.max(current.bestStreak, nextStreak),
+      completedToday: nextCompleted,
+      lastCompleted: nextCompleted ? new Date().toISOString().split('T')[0] : current.lastCompleted,
+    });
     set((state) => ({
-      habits: state.habits.map((h) => (h.id === id ? { ...h, ...updatedFields } : h)),
-    })),
-  deleteHabit: (id) =>
-    set((state) => ({ habits: state.habits.filter((h) => h.id !== id) })),
-  toggleHabitToday: (id) =>
-    set((state) => ({
-      habits: state.habits.map((h) => {
-        if (h.id === id) {
-          const nextCompleted = !h.completedToday;
-          const nextStreak = nextCompleted ? h.streak + 1 : Math.max(0, h.streak - 1);
-          return {
-            ...h,
-            completedToday: nextCompleted,
-            streak: nextStreak,
-            bestStreak: Math.max(h.bestStreak, nextStreak),
-          };
-        }
-        return h;
-      }),
-    })),
+      habits: state.habits.map((h) => (h.id === id ? updated : h)),
+    }));
+  },
 
   goals: initialGoals,
-  addGoal: (goal) =>
+  addGoal: async (goal) => {
+    const created = await goalRepository.create(goal, get().currentWorkspaceId ?? undefined);
+    set((state) => ({ goals: [created, ...state.goals] }));
+  },
+  updateGoal: async (id, updatedFields) => {
+    const updated = await goalRepository.update(id, updatedFields);
     set((state) => ({
-      goals: [
-        {
-          ...goal,
-          id: `g-${Date.now()}`,
-          status: 'in_progress',
-          createdAt: new Date().toISOString().split('T')[0],
-        },
-        ...state.goals,
-      ],
-    })),
-  updateGoal: (id, updatedFields) =>
-    set((state) => ({
-      goals: state.goals.map((g) => (g.id === id ? { ...g, ...updatedFields } : g)),
-    })),
-  deleteGoal: (id) =>
-    set((state) => ({ goals: state.goals.filter((g) => g.id !== id) })),
+      goals: state.goals.map((g) => (g.id === id ? updated : g)),
+    }));
+  },
+  deleteGoal: async (id) => {
+    await goalRepository.delete(id);
+    set((state) => ({ goals: state.goals.filter((g) => g.id !== id) }));
+  },
 
   healthRecords: initialHealthRecords,
-  addHealthRecord: (record) =>
+  addHealthRecord: async (record) => {
+    const created = await healthRecordRepository.create(record, get().currentWorkspaceId ?? undefined);
+    set((state) => ({ healthRecords: [created, ...state.healthRecords] }));
+  },
+  updateHealthRecord: async (id, updatedFields) => {
+    const updated = await healthRecordRepository.update(id, updatedFields);
     set((state) => ({
-      healthRecords: [
-        {
-          ...record,
-          id: `hr-${Date.now()}`,
-          createdAt: new Date().toISOString().split('T')[0],
-        },
-        ...state.healthRecords,
-      ],
-    })),
-  updateHealthRecord: (id, updatedFields) =>
-    set((state) => ({
-      healthRecords: state.healthRecords.map((hr) =>
-        hr.id === id ? { ...hr, ...updatedFields } : hr
-      ),
-    })),
-  deleteHealthRecord: (id) =>
-    set((state) => ({ healthRecords: state.healthRecords.filter((hr) => hr.id !== id) })),
+      healthRecords: state.healthRecords.map((hr) => (hr.id === id ? updated : hr)),
+    }));
+  },
+  deleteHealthRecord: async (id) => {
+    await healthRecordRepository.delete(id);
+    set((state) => ({ healthRecords: state.healthRecords.filter((hr) => hr.id !== id) }));
+  },
 }));

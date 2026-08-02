@@ -182,10 +182,10 @@ export const UniversalFormEngine: React.FC<UniversalFormEngineProps> = ({
           color: data.color || '#10B981',
         };
         if (isEdit && initialData.id) {
-          updateHub(initialData.id, hubPayload);
+          await updateHub(initialData.id, hubPayload);
           toast('تم تحديث المركز بنجاح', 'success');
         } else {
-          addHub(hubPayload);
+          await addHub(hubPayload);
           toast('تم إضافة المركز بنجاح', 'success');
         }
       } else if (schema.id === 'project-schema') {
@@ -222,10 +222,10 @@ export const UniversalFormEngine: React.FC<UniversalFormEngineProps> = ({
           notes: data.notes || '',
         };
         if (isEdit && initialData.id) {
-          updateAssignment(initialData.id, assignmentPayload);
+          await updateAssignment(initialData.id, assignmentPayload);
           toast('تم تحديث التكليف بنجاح', 'success');
         } else {
-          addAssignment(assignmentPayload);
+          await addAssignment(assignmentPayload);
           toast('تم إضافة التكليف بنجاح', 'success');
         }
       } else if (schema.id === 'habit-schema') {
@@ -235,10 +235,10 @@ export const UniversalFormEngine: React.FC<UniversalFormEngineProps> = ({
           frequency: data.frequency || 'daily',
         };
         if (isEdit && initialData.id) {
-          updateHabit(initialData.id, habitPayload);
+          await updateHabit(initialData.id, habitPayload);
           toast('تم تحديث العادة بنجاح', 'success');
         } else {
-          addHabit(habitPayload);
+          await addHabit(habitPayload);
           toast('تم إضافة العادة بنجاح', 'success');
         }
       } else if (schema.id === 'goal-schema') {
@@ -252,10 +252,10 @@ export const UniversalFormEngine: React.FC<UniversalFormEngineProps> = ({
         };
         if (isEdit && initialData.id) {
           const { progress, milestones, ...goalUpdate } = goalPayload;
-          updateGoal(initialData.id, goalUpdate);
+          await updateGoal(initialData.id, goalUpdate);
           toast('تم تحديث الهدف بنجاح', 'success');
         } else {
-          addGoal(goalPayload);
+          await addGoal(goalPayload);
           toast('تم إضافة الهدف بنجاح', 'success');
         }
       } else if (schema.id === 'health-schema') {
@@ -269,10 +269,10 @@ export const UniversalFormEngine: React.FC<UniversalFormEngineProps> = ({
           notes: data.notes || '',
         };
         if (isEdit && initialData.id) {
-          updateHealthRecord(initialData.id, healthPayload);
+          await updateHealthRecord(initialData.id, healthPayload);
           toast('تم تحديث المؤشر الصحي بنجاح', 'success');
         } else {
-          addHealthRecord(healthPayload);
+          await addHealthRecord(healthPayload);
           toast('تم تسجيل المؤشر الصحي بنجاح', 'success');
         }
       }

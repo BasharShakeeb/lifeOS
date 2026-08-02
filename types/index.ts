@@ -63,6 +63,7 @@ export interface Habit {
   bestStreak: number;
   completedToday: boolean;
   history: { date: string; completed: boolean }[];
+  lastCompleted?: string;
   createdAt: string;
 }
 
