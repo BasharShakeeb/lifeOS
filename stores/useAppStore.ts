@@ -10,9 +10,15 @@ import { healthRecordRepository } from '@/repositories/healthRecordRepository';
 import { logger } from '@/lib/logger';
 
 interface AppState {
-  // Sidebar Collapsed State
+  // Sidebar Collapsed State (Desktop)
   isSidebarCollapsed: boolean;
   toggleSidebar: () => void;
+
+  // Mobile Sidebar Drawer State
+  isMobileSidebarOpen: boolean;
+  openMobileSidebar: () => void;
+  closeMobileSidebar: () => void;
+  toggleMobileSidebar: () => void;
 
   // Navigation & Search State
   searchQuery: string;
@@ -101,6 +107,11 @@ const initialHealthRecords: HealthRecord[] = [];
 export const useAppStore = create<AppState>((set, get) => ({
   isSidebarCollapsed: false,
   toggleSidebar: () => set((state) => ({ isSidebarCollapsed: !state.isSidebarCollapsed })),
+
+  isMobileSidebarOpen: false,
+  openMobileSidebar: () => set({ isMobileSidebarOpen: true }),
+  closeMobileSidebar: () => set({ isMobileSidebarOpen: false }),
+  toggleMobileSidebar: () => set((state) => ({ isMobileSidebarOpen: !state.isMobileSidebarOpen })),
 
   searchQuery: '',
   setSearchQuery: (query: string) => set({ searchQuery: query }),

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Bell, MessageSquare, User, LogOut, LogIn, ChevronDown } from 'lucide-react';
+import { Bell, MessageSquare, User, LogOut, LogIn, ChevronDown, Menu } from 'lucide-react';
 import { useAppStore } from '@/stores/useAppStore';
 import { SearchInput } from '@/components/ui/SearchInput';
 import { supabase } from '@/lib/supabase/client';
@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export const TopNav: React.FC = () => {
-  const { searchQuery, setSearchQuery, isSidebarCollapsed } = useAppStore();
+  const { searchQuery, setSearchQuery, isSidebarCollapsed, toggleMobileSidebar } = useAppStore();
   const router = useRouter();
   const [userName, setUserName] = useState<string>('');
   const [userEmail, setUserEmail] = useState<string>('');
@@ -84,10 +84,19 @@ export const TopNav: React.FC = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 h-16 bg-surface-container-lowest border-b border-outline-variant/30 z-40 px-6 flex items-center justify-between transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 h-16 bg-surface-container-lowest border-b border-outline-variant/30 z-40 px-3 md:px-6 flex items-center justify-between gap-2 transition-all duration-300 ${
         isSidebarCollapsed ? 'md:right-20' : 'md:right-64'
       }`}
     >
+      {/* Mobile Menu Button */}
+      <button
+        onClick={toggleMobileSidebar}
+        className="md:hidden flex-shrink-0 p-2 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"
+        aria-label="فتح القائمة"
+      >
+        <Menu className="w-5 h-5" />
+      </button>
+
       {/* Search Input */}
       <SearchInput
         value={searchQuery}

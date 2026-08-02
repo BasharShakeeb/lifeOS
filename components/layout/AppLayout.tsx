@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { TopNav } from './TopNav';
 import { MobileNav } from './MobileNav';
+import { MobileSidebar } from './MobileSidebar';
 import { GlobalModalManager } from '@/components/modals/GlobalModalManager';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { useAppStore } from '@/stores/useAppStore';
@@ -42,6 +43,9 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
 
       {/* Mobile Navigation */}
       <MobileNav />
+
+      {/* Mobile Sidebar Drawer */}
+      <MobileSidebar />
 
       {/* Global Orchestrator for Drawers and Modals */}
       <GlobalModalManager />
